@@ -1,0 +1,256 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Definição do modelo Album
+model album {
+  codAlbum           Int                  @id @default(autoincrement())
+  tituloAlbum        String
+  descricao          String
+  editora            String
+  capaAlbum          String
+  dataLancamento     DateTime
+  dataDeRegistro     DateTime
+  fkArtista          Int
+  fkGrupoMusical     Int
+  artista            artista?             @relation(fields: [fkArtista], references: [codArtista])
+  grupoMusical       grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
+  musica             musica[]
+  criticas           criticas[]
+  partilhaDeConteudo partilhaDeConteudo[]
+}
+
+//Definição do modelo do grupo musical
+model grupoMusical {
+  codGrupoMusical  Int       @id @default(autoincrement())
+  nomeGrupoMusical String
+  historia         String
+  dataDeCriacao    DateTime
+  dataDeRegisto    DateTime
+  musica           musica[]
+  video            video[]
+  album            album[]
+  artista          artista[]
+}
+
+//Definição do modelo do artista
+model artista {
+  codArtista         Int                  @id @default(autoincrement())
+  nomeArtista        String
+  historia           String
+  dataDeCriacao      DateTime
+  dataDeRegisto      DateTime
+  fkGrupoMusical     Int
+  grupoMusical       grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
+  album              album[]
+  musica             musica[]
+  participacaoMusica participacaoMusica[]
+  video              video[]
+  participacaoVideo  participacaoVideo[]
+}
+
+//Definição do modelo da musica
+model musica {
+  codMusica          Int                  @id @default(autoincrement())
+  tituloMusica       String
+  ficheiroMusical    String
+  letra              String
+  generoMusical      String
+  compositor         String
+  capaMusica         String
+  fkAlbum            Int
+  fkGrupoMusical     Int
+  fkArtista          Int
+  album              album?               @relation(fields: [fkAlbum], references: [codAlbum])
+  grupoMusical       grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
+  artista            artista?             @relation(fields: [fkArtista], references: [codArtista])
+  dataLancamento     DateTime
+  dataDeRegisto      DateTime
+  participacaoMusica participacaoMusica[]
+  partilhaDeConteudo partilhaDeConteudo[]
+  MusicasDaPlaylist  MusicasDaPlaylist[]
+}
+
+//Definição do modelo de participação da musica
+model participacaoMusica {
+  codParticipacaoMusica Int      @id @default(autoincrement())
+  fkArtista             Int
+  fkMusica              Int
+  artista               artista? @relation(fields: [fkArtista], references: [codArtista])
+  musica                musica?  @relation(fields: [fkMusica], references: [codMusica])
+}
+
+//Definição do modelo da video
+model video {
+  codVideo           Int                  @id @default(autoincrement())
+  tituloVideo        String
+  ficheiroDoVideo    String
+  legenda            String
+  produtor           String
+  generoDoVIdeo      String
+  fkGrupoMusical     Int
+  fkArtista          Int
+  grupoMusical       grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
+  artista            artista?             @relation(fields: [fkArtista], references: [codArtista])
+  dataLancamento     DateTime
+  dataDeRegisto      DateTime
+  participacaoVideo  participacaoVideo[]
+  partilhaDeConteudo partilhaDeConteudo[]
+  videosDaPlaylist   videosDaPlaylist[]
+}
+
+//Definição do modelo de participação do video
+model participacaoVideo {
+  codParticipacaoVideo Int      @id @default(autoincrement())
+  fkArtista            Int
+  fkVideo              Int
+  artista              artista? @relation(fields: [fkArtista], references: [codArtista])
+  video                video?   @relation(fields: [fkVideo], references: [codVideo])
+}
+
+//Definição do modelo de utilizador
+model utilizador {
+  codUtilizador           Int                       @id @default(autoincrement())
+  username                String                    @unique
+  senha                   String
+  email                   String
+  telefone                String
+  tipoDeUtilizador        String //editor-naoEditor-admin
+  criticas                criticas[]
+  partilhaDeConteudo      partilhaDeConteudo[]
+  playlist                playlist[]
+  grupoDeAmigos           grupoDeAmigos[]
+  membrosDosGrupos        membrosDosGrupos[]
+  ownersDosGrupos         ownersDosGrupos[]
+  PedidoDeAdicaoNosGrupos PedidoDeAdicaoNosGrupos[]
+  listaDePartilha         listaDePartilha[]
+  notificacao             notificacao[]
+}
+
+//Definição do modelo de criticas a um album
+model criticas {
+  codCritica   Int         @id @default(autoincrement())
+  fkAlbum      Int
+  fkUtilizador Int
+  pontuacao    Int
+  comentario   String
+  album        album?      @relation(fields: [fkAlbum], references: [codAlbum])
+  utilizador   utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
+}
+
+//Definição do modelo de partilha de conteudo
+model partilhaDeConteudo {
+  codPartilha     Int         @id @default(autoincrement())
+  tipoDeConteudo  String //video, musica, album
+  fkVideo         Int
+  fkMusica        Int
+  fkAlbum         Int
+  fkGrupoDeAmigos Int
+  fkUtilizador    Int
+  album           album?      @relation(fields: [fkAlbum], references: [codAlbum])
+  utilizador      utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
+  video           video?      @relation(fields: [fkVideo], references: [codVideo])
+  musica          musica?     @relation(fields: [fkMusica], references: [codMusica])
+}
+
+//Definição do modelo de playlist
+model playlist {
+  codPlayList       Int                 @id @default(autoincrement())
+  nomePlayList      String
+  fkUtilizador      Int
+  tipoPlayList      String //privado ou publico
+  utilizador        utilizador?         @relation(fields: [fkUtilizador], references: [codUtilizador])
+  MusicasDaPlaylist MusicasDaPlaylist[]
+  videosDaPlaylist  videosDaPlaylist[]
+}
+
+//Definição do modelo de musicas da playlist
+model MusicasDaPlaylist {
+  codMusicasDaPlayList Int       @id @default(autoincrement())
+  fkMusica             Int
+  fkPlayList           Int
+  musica               musica?   @relation(fields: [fkMusica], references: [codMusica])
+  playlist             playlist? @relation(fields: [fkPlayList], references: [codPlayList])
+}
+
+//Definição do modelo de video da playlist
+model videosDaPlaylist {
+  codVideosDaPlayList Int       @id @default(autoincrement())
+  fkVideo             Int
+  fkPlayList          Int
+  video               video?    @relation(fields: [fkVideo], references: [codVideo])
+  playlist            playlist? @relation(fields: [fkPlayList], references: [codPlayList])
+}
+
+//Definição do modelo de grupo de amigos
+model grupoDeAmigos {
+  codGrupoDeAmigos          Int                         @id @default(autoincrement())
+  nomeDoGrupo               String
+  fkCriador                 Int
+  tipoDeGrupo               String //privado ou publico
+  utilizador                utilizador?                 @relation(fields: [fkCriador], references: [codUtilizador])
+  membrosDosGrupos          membrosDosGrupos[]
+  ownersDosGrupos           ownersDosGrupos[]
+  PedidoDeAdicaoNosGrupos   PedidoDeAdicaoNosGrupos[]
+  membrosDaListaDePartilhas membrosDaListaDePartilhas[]
+}
+
+//Definição do modelo de membro dos grupos de amigos
+model membrosDosGrupos {
+  codMembro       Int            @id @default(autoincrement())
+  fkGrupoDeAmigos Int
+  fkUtilizador    Int
+  utilizador      utilizador?    @relation(fields: [fkUtilizador], references: [codUtilizador])
+  grupoDeAmigos   grupoDeAmigos? @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
+}
+
+//Definição do modelo de owners dos grupos de amigos
+model ownersDosGrupos {
+  codOwner        Int            @id @default(autoincrement())
+  fkGrupoDeAmigos Int
+  fkUtilizador    Int
+  utilizador      utilizador?    @relation(fields: [fkUtilizador], references: [codUtilizador])
+  grupoDeAmigos   grupoDeAmigos? @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
+}
+
+//Definição do modelo de pedido de adição nos grupos de amigos
+model PedidoDeAdicaoNosGrupos {
+  codPedido       Int            @id @default(autoincrement())
+  fkGrupoDeAmigos Int
+  fkUtilizador    Int
+  utilizador      utilizador?    @relation(fields: [fkUtilizador], references: [codUtilizador])
+  grupoDeAmigos   grupoDeAmigos? @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
+  estadoDoPedido  Int //0-rejeitado 1-aceite 
+}
+
+//Definição do modelo de lista de partilha
+model listaDePartilha {
+  codListaDePartilha        Int                         @id @default(autoincrement())
+  nomeDaLista               String
+  fkUtilizador              Int
+  utilizador                utilizador?                 @relation(fields: [fkUtilizador], references: [codUtilizador])
+  membrosDaListaDePartilhas membrosDaListaDePartilhas[]
+}
+
+//Definição do modelo de lista de partilha
+model membrosDaListaDePartilhas {
+  codMembroLista    Int              @id @default(autoincrement())
+  fkGrupoDeAmigos   Int
+  fkListaDePartilha Int
+  grupoDeAmigos     grupoDeAmigos?   @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
+  listaDePartilha   listaDePartilha? @relation(fields: [fkListaDePartilha], references: [codListaDePartilha])
+}
+
+//Definição do modelo de notificação
+model notificacao {
+  codNotificacao   Int         @id @default(autoincrement())
+  textoNotificacao String
+  fkUtilizador     Int
+  utilizador       utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
+  dataNotificacao  DateTime
+}

@@ -39,13 +39,25 @@ export class GrupoMusicalService {
 
 
   async update(data: UpdateGrupoMusicalDto) {
+    // Valida e converte as datas para o formato ISO 8601, se forem fornecidas
+    const currentDate = new Date().toISOString();
+    let dataDeCriacao: string;
+
+    try {
+      dataDeCriacao = data.dataDeCriacao ? new Date(data.dataDeCriacao).toISOString() : currentDate;
+    } catch (error) {
+      throw new Error('Invalid dataDeRegisto value ' + dataDeCriacao);
+    }
     data.codGrupoMusical = Number(data?.codGrupoMusical);
 
     const response = await this.prisma.grupoMusical.update({
       where: {
         codGrupoMusical: data.codGrupoMusical,
       },
-      data,
+      data: {
+        ...data,
+        dataDeCriacao: dataDeCriacao,
+      },
     });
 
     return response;

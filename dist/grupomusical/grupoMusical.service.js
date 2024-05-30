@@ -36,12 +36,20 @@ let GrupoMusicalService = class GrupoMusicalService {
         }
     }
     async update(data) {
+        const currentDate = new Date().toISOString();
+        let dataDeCriacao;
+        try {
+            dataDeCriacao = data.dataDeCriacao ? new Date(data.dataDeCriacao).toISOString() : currentDate;
+        }
+        catch (error) {
+            throw new Error('Invalid dataDeRegisto value ' + dataDeCriacao);
+        }
         data.codGrupoMusical = Number(data === null || data === void 0 ? void 0 : data.codGrupoMusical);
         const response = await this.prisma.grupoMusical.update({
             where: {
                 codGrupoMusical: data.codGrupoMusical,
             },
-            data,
+            data: Object.assign(Object.assign({}, data), { dataDeCriacao: dataDeCriacao }),
         });
         return response;
     }

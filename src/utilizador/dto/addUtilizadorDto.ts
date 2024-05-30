@@ -5,4 +5,5 @@ export class AddUtilizadorDto {
     email: string
     telefone: string
     tipoDeUtilizador: string //editor-naoEditor-admin
+    fotografia: string
 }

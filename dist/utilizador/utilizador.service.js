@@ -12,9 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UtilizadorService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const fs = require("fs-extra");
+const path = require("path");
+const winattr = require("winattr");
 let UtilizadorService = class UtilizadorService {
     constructor(prisma) {
         this.prisma = prisma;
+        this.AVATAR_FOLDER = path.resolve(__dirname, '..', '..', 'conta-usuario');
+        if (!fs.existsSync(this.AVATAR_FOLDER)) {
+            fs.mkdirSync(this.AVATAR_FOLDER, { recursive: true });
+        }
     }
     async login(username, senha) {
         const utilizador = await this.prisma.utilizador.findFirst({
@@ -29,9 +36,7 @@ let UtilizadorService = class UtilizadorService {
         return utilizador;
     }
     async add(data) {
-        const utilizador = await this.prisma.utilizador.create({
-            data,
-        });
+        const utilizador = await this.prisma.utilizador.create({ data });
         return utilizador;
     }
     async update(data) {
@@ -65,6 +70,33 @@ let UtilizadorService = class UtilizadorService {
             },
         });
         return utilizador;
+    }
+    async listarUtilizadores() {
+        const utilizadores = await this.prisma.utilizador.findMany();
+        return utilizadores;
+    }
+    async downloadFoto(username, destination) {
+        const utilizador = await this.prisma.utilizador.findUnique({
+            where: {
+                username: username,
+            },
+        });
+        if (!utilizador || !utilizador.fotografia) {
+            throw new common_1.NotFoundException('Foto não encontrada para este usuário');
+        }
+        const filePath = path.join(__dirname, '..', '..', 'upload', utilizador.fotografia);
+        if (!fs.existsSync(filePath)) {
+            throw new common_1.NotFoundException('Foto não encontrada no sistema de arquivos');
+        }
+        const destinationPath = path.join(destination, utilizador.fotografia);
+        await fs.ensureDir(path.dirname(destinationPath));
+        await fs.copyFile(filePath, destinationPath);
+        const destinationDir = path.dirname(destinationPath);
+        winattr.set(destinationDir, { hidden: true }, (err) => {
+            if (err)
+                throw err;
+        });
+        return destinationPath;
     }
 };
 UtilizadorService = __decorate([

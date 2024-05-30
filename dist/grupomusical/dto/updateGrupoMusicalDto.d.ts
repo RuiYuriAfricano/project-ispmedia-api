@@ -1,0 +1,7 @@
+export declare class UpdateGrupoMusicalDto {
+    codGrupoMusical: number;
+    nomeGrupoMusical: string;
+    historia: string;
+    dataDeCriacao: Date;
+    dataDeRegisto: Date;
+}

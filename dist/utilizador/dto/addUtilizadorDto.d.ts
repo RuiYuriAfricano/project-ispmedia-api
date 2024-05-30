@@ -4,4 +4,5 @@ export declare class AddUtilizadorDto {
     email: string;
     telefone: string;
     tipoDeUtilizador: string;
+    fotografia: string;
 }

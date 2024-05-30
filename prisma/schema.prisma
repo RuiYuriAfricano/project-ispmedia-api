@@ -28,7 +28,7 @@ model album {
 //Definição do modelo do grupo musical
 model grupoMusical {
   codGrupoMusical  Int       @id @default(autoincrement())
-  nomeGrupoMusical String
+  nomeGrupoMusical String    @unique
   historia         String
   dataDeCriacao    DateTime
   dataDeRegisto    DateTime
@@ -118,9 +118,10 @@ model utilizador {
   codUtilizador           Int                       @id @default(autoincrement())
   username                String                    @unique
   senha                   String
-  email                   String
-  telefone                String
+  email                   String                    @unique
+  telefone                String                    @unique
   tipoDeUtilizador        String //editor-naoEditor-admin
+  fotografia              String                    @default("userDefault.png")
   criticas                criticas[]
   partilhaDeConteudo      partilhaDeConteudo[]
   playlist                playlist[]

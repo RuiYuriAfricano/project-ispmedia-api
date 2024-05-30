@@ -17,6 +17,8 @@ const common_1 = require("@nestjs/common");
 const utilizador_service_1 = require("./utilizador.service");
 const addUtilizadorDto_1 = require("./dto/addUtilizadorDto");
 const updateUtilizadorDto_1 = require("./dto/updateUtilizadorDto");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
 let UtilizadorController = class UtilizadorController {
     constructor(utilizadorService) {
         this.utilizadorService = utilizadorService;
@@ -24,7 +26,7 @@ let UtilizadorController = class UtilizadorController {
     login(username, senha) {
         return this.utilizadorService.login(username, senha);
     }
-    add(data) {
+    add(data, file) {
         return this.utilizadorService.add(data);
     }
     update(data) {
@@ -39,6 +41,13 @@ let UtilizadorController = class UtilizadorController {
     getOneByName(username) {
         return this.utilizadorService.getOneByName(username);
     }
+    async downloadFoto(username, destination, res) {
+        const filePath = await this.utilizadorService.downloadFoto(username, destination);
+        return res.sendFile(filePath);
+    }
+    listarUtilizadores() {
+        return this.utilizadorService.listarUtilizadores();
+    }
 };
 __decorate([
     (0, common_1.Post)('login'),
@@ -50,9 +59,20 @@ __decorate([
 ], UtilizadorController.prototype, "login", null);
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files', 10, {
+        storage: (0, multer_1.diskStorage)({
+            destination: (req, file, callback) => {
+                callback(null, 'upload/');
+            },
+            filename: (req, file, callback) => {
+                callback(null, file.originalname);
+            }
+        })
+    })),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [addUtilizadorDto_1.AddUtilizadorDto]),
+    __metadata("design:paramtypes", [addUtilizadorDto_1.AddUtilizadorDto, Object]),
     __metadata("design:returntype", void 0)
 ], UtilizadorController.prototype, "add", null);
 __decorate([
@@ -83,6 +103,21 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UtilizadorController.prototype, "getOneByName", null);
+__decorate([
+    (0, common_1.Get)('download/:username'),
+    __param(0, (0, common_1.Param)('username')),
+    __param(1, (0, common_1.Query)('destination')),
+    __param(2, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:returntype", Promise)
+], UtilizadorController.prototype, "downloadFoto", null);
+__decorate([
+    (0, common_1.Post)('listar'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UtilizadorController.prototype, "listarUtilizadores", null);
 UtilizadorController = __decorate([
     (0, common_1.Controller)('utilizador'),
     __metadata("design:paramtypes", [utilizador_service_1.UtilizadorService])

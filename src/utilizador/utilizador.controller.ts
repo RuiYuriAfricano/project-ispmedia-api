@@ -8,10 +8,17 @@ import {
   Delete,
   Controller,
   ParseIntPipe,
+  UseInterceptors,
+  UploadedFile,
+  Res,
+  Query,
 } from '@nestjs/common';
 import { UtilizadorService } from './utilizador.service';
 import { AddUtilizadorDto } from './dto/addUtilizadorDto';
 import { UpdateUtilizadorDto } from './dto/updateUtilizadorDto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { Response } from 'express';
 
 @Controller('utilizador')
 export class UtilizadorController {
@@ -23,7 +30,23 @@ export class UtilizadorController {
   }
 
   @Post()
-  add(@Body() data: AddUtilizadorDto) {
+  @UseInterceptors(
+    FilesInterceptor('files', 10, {
+      storage: diskStorage({
+        destination: (req, file, callback) => {
+          callback(null, 'upload/');
+        },
+        filename: (req, file, callback) => {
+          callback(
+            null,
+            file.originalname
+          );
+        }
+      })
+    })
+  )
+  add(@Body() data: AddUtilizadorDto,
+    @UploadedFile() file: Express.Multer.File) {
     return this.utilizadorService.add(data);
   }
 
@@ -45,5 +68,17 @@ export class UtilizadorController {
   @Post('pesquisapornome')
   getOneByName(@Body('username') username: string) {
     return this.utilizadorService.getOneByName(username);
+  }
+
+  // Exemplo de chamada do método downloadFoto no UtilizadorController
+  @Get('download/:username')
+  async downloadFoto(@Param('username') username: string, @Query('destination') destination: string, @Res() res: Response) {
+    const filePath = await this.utilizadorService.downloadFoto(username, destination);
+    return res.sendFile(filePath);
+  }
+
+  @Post('listar')
+  listarUtilizadores() {
+    return this.utilizadorService.listarUtilizadores();
   }
 }

@@ -1,13 +1,22 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { AddUtilizadorDto } from './dto/addUtilizadorDto';
 import { UpdateUtilizadorDto } from './dto/updateUtilizadorDto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as fs from 'fs-extra';
+import * as path from 'path';
+import * as winattr from 'winattr'; // Import winattr to set hidden attribute
 
 @Injectable()
 export class UtilizadorService {
-  constructor(private prisma: PrismaService) { }
+  private readonly AVATAR_FOLDER = path.resolve(__dirname, '..', '..', 'conta-usuario');
+  constructor(private prisma: PrismaService) {
+    // Verifica se a pasta de avatares existe, se não, cria-a
+    if (!fs.existsSync(this.AVATAR_FOLDER)) {
+      fs.mkdirSync(this.AVATAR_FOLDER, { recursive: true });
+    }
+  }
 
 
   async login(username: string, senha: string) {
@@ -27,9 +36,7 @@ export class UtilizadorService {
   }
 
   async add(data: AddUtilizadorDto) {
-    const utilizador = await this.prisma.utilizador.create({
-      data,
-    });
+    const utilizador = await this.prisma.utilizador.create({ data });
     return utilizador;
   }
 
@@ -73,6 +80,45 @@ export class UtilizadorService {
     });
 
     return utilizador;
+  }
+
+  async listarUtilizadores() {
+    const utilizadores = await this.prisma.utilizador.findMany();
+    return utilizadores;
+  }
+
+  async downloadFoto(username: string, destination: string) {
+    const utilizador = await this.prisma.utilizador.findUnique({
+      where: {
+        username: username,
+      },
+    });
+
+    if (!utilizador || !utilizador.fotografia) {
+      throw new NotFoundException('Foto não encontrada para este usuário');
+    }
+
+    const filePath = path.join(__dirname, '..', '..', 'upload', utilizador.fotografia);
+
+    if (!fs.existsSync(filePath)) {
+      throw new NotFoundException('Foto não encontrada no sistema de arquivos');
+    }
+
+    const destinationPath = path.join(destination, utilizador.fotografia);
+
+    // Verificar se o diretório de destino existe, se não existir, criar
+    await fs.ensureDir(path.dirname(destinationPath));
+
+    // Copiar o arquivo para o destino
+    await fs.copyFile(filePath, destinationPath);
+
+    // Ocultar o diretório de destino
+    const destinationDir = path.dirname(destinationPath);
+    winattr.set(destinationDir, { hidden: true }, (err) => {
+      if (err) throw err;
+    });
+
+    return destinationPath;
   }
 
 

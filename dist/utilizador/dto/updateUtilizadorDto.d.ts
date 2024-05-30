@@ -5,4 +5,5 @@ export declare class UpdateUtilizadorDto {
     email: string;
     telefone: string;
     tipoDeUtilizador: string;
+    fotografia: string;
 }

@@ -6,18 +6,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.GrupoMusicalModule = void 0;
 const common_1 = require("@nestjs/common");
-const utilizador_module_1 = require("./utilizador/utilizador.module");
-const grupoMusical_module_1 = require("./grupomusical/grupoMusical.module");
-const prisma_service_1 = require("./prisma/prisma.service");
-let AppModule = class AppModule {
+const grupoMusical_service_1 = require("./grupoMusical.service");
+const grupoMusical_controller_1 = require("./grupoMusical.controller");
+const prisma_service_1 = require("../prisma/prisma.service");
+let GrupoMusicalModule = class GrupoMusicalModule {
 };
-AppModule = __decorate([
+GrupoMusicalModule = __decorate([
     (0, common_1.Module)({
-        imports: [utilizador_module_1.UtilizadorModule, grupoMusical_module_1.GrupoMusicalModule],
-        providers: [prisma_service_1.PrismaService],
+        controllers: [grupoMusical_controller_1.GrupoMusicalController],
+        providers: [grupoMusical_service_1.GrupoMusicalService, prisma_service_1.PrismaService],
     })
-], AppModule);
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+], GrupoMusicalModule);
+exports.GrupoMusicalModule = GrupoMusicalModule;
+//# sourceMappingURL=grupoMusical.module.js.map

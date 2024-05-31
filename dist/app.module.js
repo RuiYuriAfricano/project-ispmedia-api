@@ -14,13 +14,15 @@ const artista_module_1 = require("./artista/artista.module");
 const album_module_1 = require("./album/album.module");
 const musica_module_1 = require("./musica/musica.module");
 const video_module_1 = require("./video/video.module");
+const participacaoVideo_module_1 = require("./participacaoVideo/participacaoVideo.module");
+const participacaoMusica_module_1 = require("./participacaoMusica/participacaoMusica.module");
 const prisma_service_1 = require("./prisma/prisma.service");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [utilizador_module_1.UtilizadorModule, grupoMusical_module_1.GrupoMusicalModule, artista_module_1.ArtistaModule, album_module_1.AlbumModule, musica_module_1.MusicaModule,
-            video_module_1.VideoModule],
+            video_module_1.VideoModule, participacaoVideo_module_1.ParticipacaoVideoModule, participacaoMusica_module_1.ParticipacaoMusicaModule],
         providers: [prisma_service_1.PrismaService],
     })
 ], AppModule);

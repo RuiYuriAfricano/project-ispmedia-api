@@ -32,7 +32,7 @@ export class ArtistaController {
     return this.artistaService.getOneByName(nomeArtista);
   }
 
-  @Get('listarArtistas')
+  @Post('listarArtistas')
   listarArtistas() {
     return this.artistaService.listarArtistas();
   }

@@ -9,8 +9,8 @@ export declare class VideoService {
     remove(id: number): Promise<import(".prisma/client").video>;
     getOne(id: number): Promise<import(".prisma/client").video>;
     listarVideos(): Promise<(import(".prisma/client").video & {
-        grupoMusical: import(".prisma/client").grupoMusical;
         artista: import(".prisma/client").artista;
+        grupoMusical: import(".prisma/client").grupoMusical;
         registadopor: import(".prisma/client").utilizador;
     })[]>;
 }

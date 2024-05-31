@@ -48,7 +48,7 @@ model artista {
   nomeArtista        String               @unique
   generoMusical      String
   dataDeRegisto      DateTime
-  fkGrupoMusical     Int
+  fkGrupoMusical     Int?
   fkUtilizador       Int
   grupoMusical       grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
   registadopor       utilizador?          @relation(fields: [fkUtilizador], references: [codUtilizador])

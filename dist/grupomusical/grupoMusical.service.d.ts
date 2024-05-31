@@ -9,5 +9,9 @@ export declare class GrupoMusicalService {
     remove(id: number): Promise<import(".prisma/client").grupoMusical>;
     getOne(id: number): Promise<import(".prisma/client").grupoMusical>;
     getOneByName(nomeGrupoMusical: string): Promise<import(".prisma/client").grupoMusical>;
-    listarGruposMusicais(): Promise<import(".prisma/client").grupoMusical[]>;
+    listarGruposMusicais(): Promise<(import(".prisma/client").grupoMusical & {
+        registadopor: {
+            username: string;
+        };
+    })[]>;
 }

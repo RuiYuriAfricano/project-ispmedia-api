@@ -92,9 +92,18 @@ export class GrupoMusicalService {
   }
 
   async listarGruposMusicais() {
-    const response = await this.prisma.grupoMusical.findMany();
+    const response = await this.prisma.grupoMusical.findMany({
+      include: {
+        registadopor: {
+          select: {
+            username: true,
+          },
+        },
+      },
+    });
     return response;
   }
+
 
 
 }

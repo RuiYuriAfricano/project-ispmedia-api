@@ -4,4 +4,5 @@ export class UpdateGrupoMusicalDto {
     historia: string
     dataDeCriacao: Date
     dataDeRegisto: Date
+    fkutilizador: number
 }

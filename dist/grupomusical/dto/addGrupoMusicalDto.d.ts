@@ -3,4 +3,5 @@ export declare class AddGrupoMusicalDto {
     historia: string;
     dataDeCriacao: string;
     dataDeRegisto: string;
+    fkutilizador: number;
 }

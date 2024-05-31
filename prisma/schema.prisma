@@ -27,11 +27,13 @@ model album {
 
 //Definição do modelo do grupo musical
 model grupoMusical {
-  codGrupoMusical  Int       @id @default(autoincrement())
-  nomeGrupoMusical String    @unique
+  codGrupoMusical  Int         @id @default(autoincrement())
+  nomeGrupoMusical String      @unique
   historia         String
   dataDeCriacao    DateTime
   dataDeRegisto    DateTime
+  fkUtilizador     Int
+  registadopor     utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
   musica           musica[]
   video            video[]
   album            album[]
@@ -41,12 +43,13 @@ model grupoMusical {
 //Definição do modelo do artista
 model artista {
   codArtista         Int                  @id @default(autoincrement())
-  nomeArtista        String
-  historia           String
-  dataDeCriacao      DateTime
+  nomeArtista        String               @unique
+  generoMusical      String
   dataDeRegisto      DateTime
   fkGrupoMusical     Int
+  fkUtilizador       Int
   grupoMusical       grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
+  registadopor       utilizador?          @relation(fields: [fkUtilizador], references: [codUtilizador])
   album              album[]
   musica             musica[]
   participacaoMusica participacaoMusica[]
@@ -131,6 +134,8 @@ model utilizador {
   PedidoDeAdicaoNosGrupos PedidoDeAdicaoNosGrupos[]
   listaDePartilha         listaDePartilha[]
   notificacao             notificacao[]
+  artista                 artista[]
+  grupoMusical            grupoMusical[]
 }
 
 //Definição do modelo de criticas a um album

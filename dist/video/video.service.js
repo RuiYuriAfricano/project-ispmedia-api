@@ -18,7 +18,20 @@ let VideoService = class VideoService {
     }
     async add(data) {
         try {
-            const response = await this.prisma.video.create({ data });
+            const response = await this.prisma.video.create({
+                data: {
+                    tituloVideo: data.tituloVideo,
+                    ficheiroDoVideo: data.ficheiroDoVideo,
+                    legenda: data.legenda,
+                    produtor: data.produtor,
+                    generoDoVIdeo: data.generoDoVideo,
+                    fkGrupoMusical: data.fkGrupoMusical,
+                    fkArtista: data.fkArtista,
+                    dataLancamento: data.dataLancamento,
+                    fkUtilizador: data.fkUtilizador,
+                    dataDeRegisto: data.dataDeRegisto
+                }
+            });
             return response;
         }
         catch (error) {

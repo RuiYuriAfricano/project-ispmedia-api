@@ -8,6 +8,6 @@ export class AddVideoDto {
     fkGrupoMusical: number;
     fkArtista: number;
     dataLancamento: Date;
-    dataDeRegisto: Date;
     fkUtilizador: number;
+    dataDeRegisto: Date;
 }

@@ -9,5 +9,6 @@ export declare class AddMusicaDto {
     fkGrupoMusical: number;
     fkArtista: number;
     dataLancamento: Date;
+    dataDeRegisto: Date;
     fkUtilizador: number;
 }

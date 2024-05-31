@@ -10,8 +10,8 @@ export declare class MusicaService {
     getOne(id: number): Promise<import(".prisma/client").musica>;
     listarMusicas(): Promise<(import(".prisma/client").musica & {
         album: import(".prisma/client").album;
-        grupoMusical: import(".prisma/client").grupoMusical;
-        artista: import(".prisma/client").artista;
         registadopor: import(".prisma/client").utilizador;
+        artista: import(".prisma/client").artista;
+        grupoMusical: import(".prisma/client").grupoMusical;
     })[]>;
 }

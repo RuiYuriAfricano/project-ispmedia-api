@@ -4,6 +4,7 @@ export declare class AddAlbumDto {
     editora: string;
     capaAlbum: string;
     dataLancamento: Date;
+    dataDeRegistro: Date;
     fkArtista: number;
     fkGrupoMusical: number;
     fkUtilizador: number;

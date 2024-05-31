@@ -8,4 +8,5 @@ export declare class AddVideoDto {
     fkArtista: number;
     dataLancamento: Date;
     fkUtilizador: number;
+    dataDeRegisto: Date;
 }

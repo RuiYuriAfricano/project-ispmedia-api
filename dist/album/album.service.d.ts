@@ -9,8 +9,8 @@ export declare class AlbumService {
     remove(id: number): Promise<import(".prisma/client").album>;
     getOne(id: number): Promise<import(".prisma/client").album>;
     listarAlbuns(): Promise<(import(".prisma/client").album & {
-        grupoMusical: import(".prisma/client").grupoMusical;
-        artista: import(".prisma/client").artista;
         registadopor: import(".prisma/client").utilizador;
+        artista: import(".prisma/client").artista;
+        grupoMusical: import(".prisma/client").grupoMusical;
     })[]>;
 }

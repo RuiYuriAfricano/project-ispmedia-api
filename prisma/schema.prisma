@@ -18,6 +18,8 @@ model album {
   dataDeRegistro     DateTime
   fkArtista          Int
   fkGrupoMusical     Int
+  fkUtilizador       Int
+  registadopor       utilizador?          @relation(fields: [fkUtilizador], references: [codUtilizador])
   artista            artista?             @relation(fields: [fkArtista], references: [codArtista])
   grupoMusical       grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
   musica             musica[]
@@ -74,6 +76,8 @@ model musica {
   artista            artista?             @relation(fields: [fkArtista], references: [codArtista])
   dataLancamento     DateTime
   dataDeRegisto      DateTime
+  fkUtilizador       Int
+  registadopor       utilizador?          @relation(fields: [fkUtilizador], references: [codUtilizador])
   participacaoMusica participacaoMusica[]
   partilhaDeConteudo partilhaDeConteudo[]
   MusicasDaPlaylist  MusicasDaPlaylist[]
@@ -102,6 +106,8 @@ model video {
   artista            artista?             @relation(fields: [fkArtista], references: [codArtista])
   dataLancamento     DateTime
   dataDeRegisto      DateTime
+  fkUtilizador       Int
+  registadopor       utilizador?          @relation(fields: [fkUtilizador], references: [codUtilizador])
   participacaoVideo  participacaoVideo[]
   partilhaDeConteudo partilhaDeConteudo[]
   videosDaPlaylist   videosDaPlaylist[]
@@ -136,6 +142,9 @@ model utilizador {
   notificacao             notificacao[]
   artista                 artista[]
   grupoMusical            grupoMusical[]
+  album                   album[]
+  musica                  musica[]
+  video                   video[]
 }
 
 //Definição do modelo de criticas a um album

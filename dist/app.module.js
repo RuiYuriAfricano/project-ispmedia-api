@@ -10,12 +10,17 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const utilizador_module_1 = require("./utilizador/utilizador.module");
 const grupoMusical_module_1 = require("./grupomusical/grupoMusical.module");
+const artista_module_1 = require("./artista/artista.module");
+const album_module_1 = require("./album/album.module");
+const musica_module_1 = require("./musica/musica.module");
+const video_module_1 = require("./video/video.module");
 const prisma_service_1 = require("./prisma/prisma.service");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [utilizador_module_1.UtilizadorModule, grupoMusical_module_1.GrupoMusicalModule],
+        imports: [utilizador_module_1.UtilizadorModule, grupoMusical_module_1.GrupoMusicalModule, artista_module_1.ArtistaModule, album_module_1.AlbumModule, musica_module_1.MusicaModule,
+            video_module_1.VideoModule],
         providers: [prisma_service_1.PrismaService],
     })
 ], AppModule);

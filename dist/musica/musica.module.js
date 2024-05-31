@@ -6,18 +6,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ArtistaModule = void 0;
+exports.MusicaModule = void 0;
 const common_1 = require("@nestjs/common");
-const artista_service_1 = require("./artista.service");
-const artista_controller_1 = require("./artista.controller");
+const musica_service_1 = require("./musica.service");
+const musica_controller_1 = require("./musica.controller");
 const prisma_service_1 = require("../prisma/prisma.service");
-let ArtistaModule = class ArtistaModule {
+let MusicaModule = class MusicaModule {
 };
-ArtistaModule = __decorate([
+MusicaModule = __decorate([
     (0, common_1.Module)({
-        controllers: [artista_controller_1.ArtistaController],
-        providers: [artista_service_1.ArtistaService, prisma_service_1.PrismaService],
+        controllers: [musica_controller_1.MusicaController],
+        providers: [musica_service_1.MusicaService, prisma_service_1.PrismaService],
     })
-], ArtistaModule);
-exports.ArtistaModule = ArtistaModule;
-//# sourceMappingURL=artista.module.js.map
+], MusicaModule);
+exports.MusicaModule = MusicaModule;
+//# sourceMappingURL=musica.module.js.map

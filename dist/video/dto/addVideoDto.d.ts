@@ -1,5 +1,4 @@
-// addVideoDto.ts
-export class AddVideoDto {
+export declare class AddVideoDto {
     tituloVideo: string;
     ficheiroDoVideo: string;
     legenda: string;
@@ -8,6 +7,5 @@ export class AddVideoDto {
     fkGrupoMusical: number;
     fkArtista: number;
     dataLancamento: Date;
-    dataDeRegisto: Date;
     fkUtilizador: number;
 }

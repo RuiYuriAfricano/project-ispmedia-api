@@ -6,18 +6,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ArtistaModule = void 0;
+exports.VideoModule = void 0;
 const common_1 = require("@nestjs/common");
-const artista_service_1 = require("./artista.service");
-const artista_controller_1 = require("./artista.controller");
+const video_service_1 = require("./video.service");
+const video_controller_1 = require("./video.controller");
 const prisma_service_1 = require("../prisma/prisma.service");
-let ArtistaModule = class ArtistaModule {
+let VideoModule = class VideoModule {
 };
-ArtistaModule = __decorate([
+VideoModule = __decorate([
     (0, common_1.Module)({
-        controllers: [artista_controller_1.ArtistaController],
-        providers: [artista_service_1.ArtistaService, prisma_service_1.PrismaService],
+        controllers: [video_controller_1.VideoController],
+        providers: [video_service_1.VideoService, prisma_service_1.PrismaService],
     })
-], ArtistaModule);
-exports.ArtistaModule = ArtistaModule;
-//# sourceMappingURL=artista.module.js.map
+], VideoModule);
+exports.VideoModule = VideoModule;
+//# sourceMappingURL=video.module.js.map

@@ -1,5 +1,4 @@
-// addMusicaDto.ts
-export class AddMusicaDto {
+export declare class AddMusicaDto {
     tituloMusica: string;
     ficheiroMusical: string;
     letra: string;
@@ -10,6 +9,5 @@ export class AddMusicaDto {
     fkGrupoMusical: number;
     fkArtista: number;
     dataLancamento: Date;
-    dataDeRegisto: Date;
     fkUtilizador: number;
 }

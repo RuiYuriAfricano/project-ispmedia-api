@@ -45,10 +45,22 @@ export class MusicaService {
   }
 
   async update(data: UpdateMusicaDto) {
+
+    let dataLancamento: string;
+
+    try {
+      dataLancamento = new Date(data.dataLancamento).toISOString();
+    } catch (error) {
+      throw new Error('Invalid date value');
+    }
+
     try {
       const response = await this.prisma.musica.update({
         where: { codMusica: data.codMusica },
-        data,
+        data: {
+          ...data,
+          dataLancamento,
+        },
       });
       return response;
     } catch (error) {

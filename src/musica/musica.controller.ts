@@ -71,7 +71,7 @@ export class MusicaController {
     return this.musicaService.getOne(id);
   }
 
-  @Get('listarMusicas')
+  @Post('listarMusicas')
   listarMusicas() {
     return this.musicaService.listarMusicas();
   }

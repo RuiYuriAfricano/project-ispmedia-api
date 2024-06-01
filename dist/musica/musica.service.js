@@ -53,10 +53,17 @@ let MusicaService = class MusicaService {
         }
     }
     async update(data) {
+        let dataLancamento;
+        try {
+            dataLancamento = new Date(data.dataLancamento).toISOString();
+        }
+        catch (error) {
+            throw new Error('Invalid date value');
+        }
         try {
             const response = await this.prisma.musica.update({
                 where: { codMusica: data.codMusica },
-                data,
+                data: Object.assign(Object.assign({}, data), { dataLancamento }),
             });
             return response;
         }

@@ -110,7 +110,7 @@ export class AlbumService {
     return response;
   }
 
-  async downloadCapa(id: number, destination: string) {
+  async downloadCapa(id: number) {
     const album = await this.prisma.album.findUnique({
       where: { codAlbum: id },
     });
@@ -124,20 +124,7 @@ export class AlbumService {
       throw new NotFoundException('Capa não encontrada no sistema de arquivos');
     }
 
-    const destinationPath = path.join(destination, album.capaAlbum);
 
-    // Verificar se o diretório de destino existe, se não existir, criar
-    await fs.ensureDir(path.dirname(destinationPath));
-
-    // Copiar o arquivo para o destino
-    await fs.copyFile(filePath, destinationPath);
-
-    // Ocultar o diretório de destino
-    const destinationDir = path.dirname(destinationPath);
-    winattr.set(destinationDir, { hidden: true }, (err) => {
-      if (err) throw err;
-    });
-    console.log("Path:", destinationPath)
-    return destinationPath;
+    return filePath;
   }
 }

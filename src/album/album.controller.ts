@@ -108,10 +108,9 @@ export class AlbumController {
   @Get('downloadCapa/:id')
   async downloadCapa(
     @Param('id', ParseIntPipe) id: number,
-    @Query('destination') destination: string,
     @Res() res: Response,
   ) {
-    const filePath = await this.albumService.downloadCapa(id, destination);
+    const filePath = await this.albumService.downloadCapa(id);
     return res.sendFile(filePath);
   }
 }

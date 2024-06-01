@@ -72,8 +72,8 @@ export class UtilizadorController {
 
   // Exemplo de chamada do método downloadFoto no UtilizadorController
   @Get('download/:username')
-  async downloadFoto(@Param('username') username: string, @Query('destination') destination: string, @Res() res: Response) {
-    const filePath = await this.utilizadorService.downloadFoto(username, destination);
+  async downloadFoto(@Param('username') username: string, @Res() res: Response) {
+    const filePath = await this.utilizadorService.downloadFoto(username);
     return res.sendFile(filePath);
   }
 

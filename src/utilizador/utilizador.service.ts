@@ -87,7 +87,7 @@ export class UtilizadorService {
     return utilizadores;
   }
 
-  async downloadFoto(username: string, destination: string) {
+  async downloadFoto(username: string) {
     const utilizador = await this.prisma.utilizador.findUnique({
       where: {
         username: username,
@@ -104,21 +104,9 @@ export class UtilizadorService {
       throw new NotFoundException('Foto não encontrada no sistema de arquivos');
     }
 
-    const destinationPath = path.join(destination, utilizador.fotografia);
 
-    // Verificar se o diretório de destino existe, se não existir, criar
-    await fs.ensureDir(path.dirname(destinationPath));
 
-    // Copiar o arquivo para o destino
-    await fs.copyFile(filePath, destinationPath);
-
-    // Ocultar o diretório de destino
-    const destinationDir = path.dirname(destinationPath);
-    winattr.set(destinationDir, { hidden: true }, (err) => {
-      if (err) throw err;
-    });
-
-    return destinationPath;
+    return filePath;
   }
 
 

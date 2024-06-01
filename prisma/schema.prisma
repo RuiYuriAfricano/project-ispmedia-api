@@ -68,9 +68,9 @@ model musica {
   generoMusical      String
   compositor         String
   capaMusica         String
-  fkAlbum            Int
-  fkGrupoMusical     Int
-  fkArtista          Int
+  fkAlbum            Int?
+  fkGrupoMusical     Int?
+  fkArtista          Int?
   album              album?               @relation(fields: [fkAlbum], references: [codAlbum])
   grupoMusical       grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
   artista            artista?             @relation(fields: [fkArtista], references: [codArtista])

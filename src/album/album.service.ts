@@ -118,7 +118,7 @@ export class AlbumService {
       throw new NotFoundException('Capa não encontrada para este álbum');
     }
 
-    const filePath = path.join(__dirname, '..', '..', 'uploadcapas', album.capaAlbum);
+    const filePath = path.join(__dirname, '..', '..', 'uploadcapasalbum', album.capaAlbum);
 
     if (!fs.existsSync(filePath)) {
       throw new NotFoundException('Capa não encontrada no sistema de arquivos');

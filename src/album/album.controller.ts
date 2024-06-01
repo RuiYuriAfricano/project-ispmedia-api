@@ -10,7 +10,6 @@ import {
   UseInterceptors,
   UploadedFile,
   Res,
-  Query,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { AddAlbumDto } from './dto/addAlbumDto';
@@ -30,7 +29,7 @@ export class AlbumController {
     FilesInterceptor('files', 1, {
       storage: diskStorage({
         destination: (req, file, callback) => {
-          const uploadPath = 'uploadcapas';
+          const uploadPath = 'uploadcapasalbum';
           fs.ensureDirSync(uploadPath);
           callback(null, uploadPath);
         },
@@ -54,7 +53,7 @@ export class AlbumController {
     FilesInterceptor('files', 1, {
       storage: diskStorage({
         destination: (req, file, callback) => {
-          const uploadPath = 'uploadcapas';
+          const uploadPath = 'uploadcapasalbum';
           fs.ensureDirSync(uploadPath);
           callback(null, uploadPath);
         },

@@ -6,10 +6,10 @@ export class AddMusicaDto {
     generoMusical: string;
     compositor: string;
     capaMusica: string;
-    fkAlbum: number;
-    fkGrupoMusical: number;
-    fkArtista: number;
-    dataLancamento: Date;
-    dataDeRegisto: Date;
+    fkAlbum?: number;
+    fkGrupoMusical?: number;
+    fkArtista?: number;
+    dataLancamento: string;
+    dataDeRegisto: string;
     fkUtilizador: number;
 }

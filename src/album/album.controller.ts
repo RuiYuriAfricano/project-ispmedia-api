@@ -27,8 +27,13 @@ export class AlbumController {
     return this.albumService.getOne(id);
   }
 
-  @Get('listarAlbuns')
+  @Post('listarAlbuns')
   listarAlbuns() {
     return this.albumService.listarAlbuns();
+  }
+
+  @Get('pesquisaPorTitulo/:tituloAlbum')
+  pesquisaPorTitulo(@Param('tituloAlbum') titulo: string) {
+    return this.albumService.pesquisaPorTitulo(titulo);
   }
 }

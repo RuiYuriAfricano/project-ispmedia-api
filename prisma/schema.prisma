@@ -16,8 +16,8 @@ model album {
   capaAlbum          String
   dataLancamento     DateTime
   dataDeRegistro     DateTime
-  fkArtista          Int
-  fkGrupoMusical     Int
+  fkArtista          Int?
+  fkGrupoMusical     Int?
   fkUtilizador       Int
   registadopor       utilizador?          @relation(fields: [fkUtilizador], references: [codUtilizador])
   artista            artista?             @relation(fields: [fkArtista], references: [codArtista])

@@ -9,8 +9,13 @@ export declare class AlbumController {
     remove(id: number): Promise<import(".prisma/client").album>;
     getOne(id: number): Promise<import(".prisma/client").album>;
     listarAlbuns(): Promise<(import(".prisma/client").album & {
+        registadopor: import(".prisma/client").utilizador;
         artista: import(".prisma/client").artista;
         grupoMusical: import(".prisma/client").grupoMusical;
+    })[]>;
+    pesquisaPorTitulo(titulo: string): Promise<(import(".prisma/client").album & {
         registadopor: import(".prisma/client").utilizador;
+        artista: import(".prisma/client").artista;
+        grupoMusical: import(".prisma/client").grupoMusical;
     })[]>;
 }

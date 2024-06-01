@@ -36,6 +36,9 @@ let AlbumController = class AlbumController {
     listarAlbuns() {
         return this.albumService.listarAlbuns();
     }
+    pesquisaPorTitulo(titulo) {
+        return this.albumService.pesquisaPorTitulo(titulo);
+    }
 };
 __decorate([
     (0, common_1.Post)(),
@@ -66,11 +69,18 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AlbumController.prototype, "getOne", null);
 __decorate([
-    (0, common_1.Get)('listarAlbuns'),
+    (0, common_1.Post)('listarAlbuns'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AlbumController.prototype, "listarAlbuns", null);
+__decorate([
+    (0, common_1.Get)('pesquisaPorTitulo/:tituloAlbum'),
+    __param(0, (0, common_1.Param)('tituloAlbum')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AlbumController.prototype, "pesquisaPorTitulo", null);
 AlbumController = __decorate([
     (0, common_1.Controller)('album'),
     __metadata("design:paramtypes", [album_service_1.AlbumService])

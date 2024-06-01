@@ -10,11 +10,11 @@ export declare class ArtistaController {
     getOne(id: number): Promise<import(".prisma/client").artista>;
     getOneByName(nomeArtista: string): Promise<import(".prisma/client").artista>;
     listarArtistas(): Promise<(import(".prisma/client").artista & {
-        grupoMusical: {
-            nomeGrupoMusical: string;
-        };
         registadopor: {
             username: string;
+        };
+        grupoMusical: {
+            nomeGrupoMusical: string;
         };
     })[]>;
 }

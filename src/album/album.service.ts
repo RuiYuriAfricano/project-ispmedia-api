@@ -8,8 +8,25 @@ export class AlbumService {
   constructor(private prisma: PrismaService) { }
 
   async add(data: AddAlbumDto) {
+    const currentDate = new Date().toISOString();
+    let dataLancamento: string;
+    let dataDeRegistro: string;
+
     try {
-      const response = await this.prisma.album.create({ data });
+      dataLancamento = new Date(data.dataLancamento).toISOString();
+      dataDeRegistro = currentDate;
+    } catch (error) {
+      throw new Error('Invalid date value');
+    }
+
+    try {
+      const response = await this.prisma.album.create({
+        data: {
+          ...data,
+          dataLancamento,
+          dataDeRegistro,
+        },
+      });
       return response;
     } catch (error) {
       throw new Error(`Failed to create album: ${error.message}`);
@@ -17,10 +34,23 @@ export class AlbumService {
   }
 
   async update(data: UpdateAlbumDto) {
+    const currentDate = new Date().toISOString();
+    let dataLancamento: string;
+    let dataDeRegistro: string;
+
+    try {
+      dataLancamento = new Date(data.dataLancamento).toISOString();
+    } catch (error) {
+      throw new Error('Invalid date value');
+    }
+
     try {
       const response = await this.prisma.album.update({
         where: { codAlbum: data.codAlbum },
-        data,
+        data: {
+          ...data,
+          dataLancamento,
+        },
       });
       return response;
     } catch (error) {
@@ -47,6 +77,22 @@ export class AlbumService {
 
   async listarAlbuns() {
     const response = await this.prisma.album.findMany({
+      include: {
+        artista: true,
+        grupoMusical: true,
+        registadopor: true,
+      },
+    });
+    return response;
+  }
+
+  async pesquisaPorTitulo(titulo: string) {
+    const response = await this.prisma.album.findMany({
+      where: {
+        tituloAlbum: {
+          contains: titulo,
+        },
+      },
       include: {
         artista: true,
         grupoMusical: true,

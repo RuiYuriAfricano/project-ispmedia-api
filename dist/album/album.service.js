@@ -17,8 +17,21 @@ let AlbumService = class AlbumService {
         this.prisma = prisma;
     }
     async add(data) {
+        const currentDate = new Date().toISOString();
+        let dataLancamento;
+        let dataDeRegistro;
         try {
-            const response = await this.prisma.album.create({ data });
+            dataLancamento = new Date(data.dataLancamento).toISOString();
+            dataDeRegistro = currentDate;
+        }
+        catch (error) {
+            throw new Error('Invalid date value');
+        }
+        try {
+            const response = await this.prisma.album.create({
+                data: Object.assign(Object.assign({}, data), { dataLancamento,
+                    dataDeRegistro }),
+            });
             return response;
         }
         catch (error) {
@@ -26,10 +39,19 @@ let AlbumService = class AlbumService {
         }
     }
     async update(data) {
+        const currentDate = new Date().toISOString();
+        let dataLancamento;
+        let dataDeRegistro;
+        try {
+            dataLancamento = new Date(data.dataLancamento).toISOString();
+        }
+        catch (error) {
+            throw new Error('Invalid date value');
+        }
         try {
             const response = await this.prisma.album.update({
                 where: { codAlbum: data.codAlbum },
-                data,
+                data: Object.assign(Object.assign({}, data), { dataLancamento }),
             });
             return response;
         }
@@ -54,6 +76,21 @@ let AlbumService = class AlbumService {
     }
     async listarAlbuns() {
         const response = await this.prisma.album.findMany({
+            include: {
+                artista: true,
+                grupoMusical: true,
+                registadopor: true,
+            },
+        });
+        return response;
+    }
+    async pesquisaPorTitulo(titulo) {
+        const response = await this.prisma.album.findMany({
+            where: {
+                tituloAlbum: {
+                    contains: titulo,
+                },
+            },
             include: {
                 artista: true,
                 grupoMusical: true,

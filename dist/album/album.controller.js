@@ -17,15 +17,22 @@ const common_1 = require("@nestjs/common");
 const album_service_1 = require("./album.service");
 const addAlbumDto_1 = require("./dto/addAlbumDto");
 const updateAlbumDto_1 = require("./dto/updateAlbumDto");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
+const fs = require("fs-extra");
 let AlbumController = class AlbumController {
     constructor(albumService) {
         this.albumService = albumService;
     }
-    add(data) {
-        return this.albumService.add(data);
+    add(data, file) {
+        return this.albumService.add(Object.assign(Object.assign({}, data), { "fkUtilizador": Number(data.fkUtilizador), "fkArtista": Number(data.fkArtista) || null, "fkGrupoMusical": Number(data.fkGrupoMusical) || null }));
     }
-    update(data) {
-        return this.albumService.update(data);
+    update(data, file) {
+        const updateData = Object.assign(Object.assign({}, data), { codAlbum: Number(data.codAlbum), fkUtilizador: Number(data.fkUtilizador), fkArtista: Number(data.fkArtista) || null, fkGrupoMusical: Number(data.fkGrupoMusical) || null });
+        if (file) {
+            updateData.capaAlbum = file.filename;
+        }
+        return this.albumService.update(updateData);
     }
     remove(id) {
         return this.albumService.remove(id);
@@ -39,19 +46,49 @@ let AlbumController = class AlbumController {
     pesquisaPorTitulo(titulo) {
         return this.albumService.pesquisaPorTitulo(titulo);
     }
+    async downloadCapa(id, destination, res) {
+        const filePath = await this.albumService.downloadCapa(id, destination);
+        return res.sendFile(filePath);
+    }
 };
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files', 1, {
+        storage: (0, multer_1.diskStorage)({
+            destination: (req, file, callback) => {
+                const uploadPath = 'uploadcapas';
+                fs.ensureDirSync(uploadPath);
+                callback(null, uploadPath);
+            },
+            filename: (req, file, callback) => {
+                callback(null, file.originalname);
+            },
+        }),
+    })),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [addAlbumDto_1.AddAlbumDto]),
+    __metadata("design:paramtypes", [addAlbumDto_1.AddAlbumDto, Object]),
     __metadata("design:returntype", void 0)
 ], AlbumController.prototype, "add", null);
 __decorate([
     (0, common_1.Put)(),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files', 1, {
+        storage: (0, multer_1.diskStorage)({
+            destination: (req, file, callback) => {
+                const uploadPath = 'uploadcapas';
+                fs.ensureDirSync(uploadPath);
+                callback(null, uploadPath);
+            },
+            filename: (req, file, callback) => {
+                callback(null, file.originalname);
+            },
+        }),
+    })),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [updateAlbumDto_1.UpdateAlbumDto]),
+    __metadata("design:paramtypes", [updateAlbumDto_1.UpdateAlbumDto, Object]),
     __metadata("design:returntype", void 0)
 ], AlbumController.prototype, "update", null);
 __decorate([
@@ -81,6 +118,15 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AlbumController.prototype, "pesquisaPorTitulo", null);
+__decorate([
+    (0, common_1.Get)('downloadCapa/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Query)('destination')),
+    __param(2, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String, Object]),
+    __metadata("design:returntype", Promise)
+], AlbumController.prototype, "downloadCapa", null);
 AlbumController = __decorate([
     (0, common_1.Controller)('album'),
     __metadata("design:paramtypes", [album_service_1.AlbumService])

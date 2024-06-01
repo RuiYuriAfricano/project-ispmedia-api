@@ -1,11 +1,13 @@
+/// <reference types="multer" />
 import { AlbumService } from './album.service';
 import { AddAlbumDto } from './dto/addAlbumDto';
 import { UpdateAlbumDto } from './dto/updateAlbumDto';
+import { Response } from 'express';
 export declare class AlbumController {
     private albumService;
     constructor(albumService: AlbumService);
-    add(data: AddAlbumDto): Promise<import(".prisma/client").album>;
-    update(data: UpdateAlbumDto): Promise<import(".prisma/client").album>;
+    add(data: AddAlbumDto, file: Express.Multer.File): Promise<import(".prisma/client").album>;
+    update(data: UpdateAlbumDto, file: Express.Multer.File): Promise<import(".prisma/client").album>;
     remove(id: number): Promise<import(".prisma/client").album>;
     getOne(id: number): Promise<import(".prisma/client").album>;
     listarAlbuns(): Promise<(import(".prisma/client").album & {
@@ -18,4 +20,5 @@ export declare class AlbumController {
         artista: import(".prisma/client").artista;
         grupoMusical: import(".prisma/client").grupoMusical;
     })[]>;
+    downloadCapa(id: number, destination: string, res: Response): Promise<void>;
 }

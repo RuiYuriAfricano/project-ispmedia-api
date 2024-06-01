@@ -12,9 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AlbumService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const fs = require("fs-extra");
+const path = require("path");
+const winattr = require("winattr");
 let AlbumService = class AlbumService {
     constructor(prisma) {
         this.prisma = prisma;
+        this.CAPA_FOLDER = path.resolve(__dirname, '..', '..', 'upload', 'capas');
+        if (!fs.existsSync(this.CAPA_FOLDER)) {
+            fs.mkdirSync(this.CAPA_FOLDER, { recursive: true });
+        }
     }
     async add(data) {
         const currentDate = new Date().toISOString();
@@ -39,9 +46,7 @@ let AlbumService = class AlbumService {
         }
     }
     async update(data) {
-        const currentDate = new Date().toISOString();
         let dataLancamento;
-        let dataDeRegistro;
         try {
             dataLancamento = new Date(data.dataLancamento).toISOString();
         }
@@ -98,6 +103,28 @@ let AlbumService = class AlbumService {
             },
         });
         return response;
+    }
+    async downloadCapa(id, destination) {
+        const album = await this.prisma.album.findUnique({
+            where: { codAlbum: id },
+        });
+        if (album === null) {
+            throw new common_1.NotFoundException('Capa não encontrada para este álbum');
+        }
+        const filePath = path.join(__dirname, '..', '..', 'uploadcapas', album.capaAlbum);
+        if (!fs.existsSync(filePath)) {
+            throw new common_1.NotFoundException('Capa não encontrada no sistema de arquivos');
+        }
+        const destinationPath = path.join(destination, album.capaAlbum);
+        await fs.ensureDir(path.dirname(destinationPath));
+        await fs.copyFile(filePath, destinationPath);
+        const destinationDir = path.dirname(destinationPath);
+        winattr.set(destinationDir, { hidden: true }, (err) => {
+            if (err)
+                throw err;
+        });
+        console.log("Path:", destinationPath);
+        return destinationPath;
     }
 };
 AlbumService = __decorate([

@@ -3,6 +3,7 @@ import { UpdateAlbumDto } from './dto/updateAlbumDto';
 import { PrismaService } from 'src/prisma/prisma.service';
 export declare class AlbumService {
     private prisma;
+    private readonly CAPA_FOLDER;
     constructor(prisma: PrismaService);
     add(data: AddAlbumDto): Promise<import(".prisma/client").album>;
     update(data: UpdateAlbumDto): Promise<import(".prisma/client").album>;
@@ -18,4 +19,5 @@ export declare class AlbumService {
         artista: import(".prisma/client").artista;
         grupoMusical: import(".prisma/client").grupoMusical;
     })[]>;
+    downloadCapa(id: number, destination: string): Promise<string>;
 }

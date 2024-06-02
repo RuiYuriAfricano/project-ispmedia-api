@@ -13,4 +13,5 @@ export declare class VideoService {
         artista: import(".prisma/client").artista;
         registadopor: import(".prisma/client").utilizador;
     })[]>;
+    downloadVideo(id: number): Promise<string>;
 }

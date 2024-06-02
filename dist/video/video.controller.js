@@ -17,15 +17,18 @@ const common_1 = require("@nestjs/common");
 const video_service_1 = require("./video.service");
 const addVideoDto_1 = require("./dto/addVideoDto");
 const updateVideoDto_1 = require("./dto/updateVideoDto");
+const multer_1 = require("multer");
+const platform_express_1 = require("@nestjs/platform-express");
+const fs = require("fs-extra");
 let VideoController = class VideoController {
     constructor(videoService) {
         this.videoService = videoService;
     }
     add(data) {
-        return this.videoService.add(data);
+        return this.videoService.add(Object.assign(Object.assign({}, data), { "fkUtilizador": Number(data.fkUtilizador), "fkArtista": Number(data.fkArtista) || null, "fkGrupoMusical": Number(data.fkGrupoMusical) || null }));
     }
     update(data) {
-        return this.videoService.update(data);
+        return this.videoService.update(Object.assign(Object.assign({}, data), { "codVideo": Number(data.codVideo), "fkUtilizador": Number(data.fkUtilizador), "fkArtista": Number(data.fkArtista) || null, "fkGrupoMusical": Number(data.fkGrupoMusical) || null }));
     }
     remove(id) {
         return this.videoService.remove(id);
@@ -36,9 +39,25 @@ let VideoController = class VideoController {
     listarVideos() {
         return this.videoService.listarVideos();
     }
+    async downloadMusica(id, res) {
+        const filePath = await this.videoService.downloadVideo(id);
+        return res.sendFile(filePath);
+    }
 };
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files', 1, {
+        storage: (0, multer_1.diskStorage)({
+            destination: (req, file, callback) => {
+                const uploadPath = 'uploadvideos';
+                fs.ensureDirSync(uploadPath);
+                callback(null, uploadPath);
+            },
+            filename: (req, file, callback) => {
+                callback(null, file.originalname);
+            },
+        }),
+    })),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [addVideoDto_1.AddVideoDto]),
@@ -46,6 +65,18 @@ __decorate([
 ], VideoController.prototype, "add", null);
 __decorate([
     (0, common_1.Put)(),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files', 1, {
+        storage: (0, multer_1.diskStorage)({
+            destination: (req, file, callback) => {
+                const uploadPath = 'uploadvideos';
+                fs.ensureDirSync(uploadPath);
+                callback(null, uploadPath);
+            },
+            filename: (req, file, callback) => {
+                callback(null, file.originalname);
+            },
+        }),
+    })),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [updateVideoDto_1.UpdateVideoDto]),
@@ -66,11 +97,19 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], VideoController.prototype, "getOne", null);
 __decorate([
-    (0, common_1.Get)('listarVideos'),
+    (0, common_1.Post)('listarVideos'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], VideoController.prototype, "listarVideos", null);
+__decorate([
+    (0, common_1.Get)('downloadVideo/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], VideoController.prototype, "downloadMusica", null);
 VideoController = __decorate([
     (0, common_1.Controller)('video'),
     __metadata("design:paramtypes", [video_service_1.VideoService])

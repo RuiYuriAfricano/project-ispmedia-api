@@ -5,9 +5,9 @@ export class AddVideoDto {
     legenda: string;
     produtor: string;
     generoDoVideo: string;
-    fkGrupoMusical: number;
-    fkArtista: number;
-    dataLancamento: Date;
+    fkGrupoMusical?: number;
+    fkArtista?: number;
+    dataLancamento: string;
     fkUtilizador: number;
-    dataDeRegisto: Date;
+    dataDeRegisto: string;
 }

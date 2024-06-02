@@ -2,12 +2,26 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { AddVideoDto } from './dto/addVideoDto';
 import { UpdateVideoDto } from './dto/updateVideoDto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as fs from 'fs-extra';
+import * as path from 'path';
 
 @Injectable()
 export class VideoService {
   constructor(private prisma: PrismaService) { }
 
   async add(data: AddVideoDto) {
+
+    const currentDate = new Date().toISOString();
+    let dataLancamento: string;
+    let dataDeRegistro: string;
+
+    try {
+      dataLancamento = new Date(data.dataLancamento).toISOString();
+      dataDeRegistro = currentDate;
+    } catch (error) {
+      throw new Error('Invalid date value');
+    }
+
     try {
       const response = await this.prisma.video.create({
         data: {
@@ -18,9 +32,9 @@ export class VideoService {
           generoDoVIdeo: data.generoDoVideo,
           fkGrupoMusical: data.fkGrupoMusical,
           fkArtista: data.fkArtista,
-          dataLancamento: data.dataLancamento,
+          dataLancamento: dataLancamento,
           fkUtilizador: data.fkUtilizador,
-          dataDeRegisto: data.dataDeRegisto
+          dataDeRegisto: dataDeRegistro
         }
       });
       return response;
@@ -30,10 +44,23 @@ export class VideoService {
   }
 
   async update(data: UpdateVideoDto) {
+
+    let dataLancamento: string;
+
+    try {
+      dataLancamento = new Date(data.dataLancamento).toISOString();
+    } catch (error) {
+      throw new Error('Invalid date value');
+    }
+
     try {
       const response = await this.prisma.video.update({
         where: { codVideo: data.codVideo },
-        data,
+        data: {
+          ...data,
+          dataLancamento,
+          generoDoVIdeo: data.generoDoVideo,
+        },
       });
       return response;
     } catch (error) {
@@ -68,4 +95,23 @@ export class VideoService {
     });
     return response;
   }
+
+  async downloadVideo(id: number) {
+    const video = await this.prisma.video.findUnique({
+      where: { codVideo: id },
+    });
+    if (video === null) {
+      throw new NotFoundException('Video não encontrada');
+    }
+
+    const filePath = path.join(__dirname, '..', '..', 'uploadvideos', video.ficheiroDoVideo);
+
+    if (!fs.existsSync(filePath)) {
+      throw new NotFoundException('Video não encontrada no sistema de arquivos');
+    }
+
+
+    return filePath;
+  }
+
 }

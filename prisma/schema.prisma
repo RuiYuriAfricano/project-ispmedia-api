@@ -100,8 +100,8 @@ model video {
   legenda            String
   produtor           String
   generoDoVIdeo      String
-  fkGrupoMusical     Int
-  fkArtista          Int
+  fkGrupoMusical     Int?
+  fkArtista          Int?
   grupoMusical       grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
   artista            artista?             @relation(fields: [fkArtista], references: [codArtista])
   dataLancamento     DateTime

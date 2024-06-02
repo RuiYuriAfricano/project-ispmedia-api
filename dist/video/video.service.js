@@ -12,11 +12,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VideoService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const fs = require("fs-extra");
+const path = require("path");
 let VideoService = class VideoService {
     constructor(prisma) {
         this.prisma = prisma;
     }
     async add(data) {
+        const currentDate = new Date().toISOString();
+        let dataLancamento;
+        let dataDeRegistro;
+        try {
+            dataLancamento = new Date(data.dataLancamento).toISOString();
+            dataDeRegistro = currentDate;
+        }
+        catch (error) {
+            throw new Error('Invalid date value');
+        }
         try {
             const response = await this.prisma.video.create({
                 data: {
@@ -27,9 +39,9 @@ let VideoService = class VideoService {
                     generoDoVIdeo: data.generoDoVideo,
                     fkGrupoMusical: data.fkGrupoMusical,
                     fkArtista: data.fkArtista,
-                    dataLancamento: data.dataLancamento,
+                    dataLancamento: dataLancamento,
                     fkUtilizador: data.fkUtilizador,
-                    dataDeRegisto: data.dataDeRegisto
+                    dataDeRegisto: dataDeRegistro
                 }
             });
             return response;
@@ -39,10 +51,17 @@ let VideoService = class VideoService {
         }
     }
     async update(data) {
+        let dataLancamento;
+        try {
+            dataLancamento = new Date(data.dataLancamento).toISOString();
+        }
+        catch (error) {
+            throw new Error('Invalid date value');
+        }
         try {
             const response = await this.prisma.video.update({
                 where: { codVideo: data.codVideo },
-                data,
+                data: Object.assign(Object.assign({}, data), { dataLancamento, generoDoVIdeo: data.generoDoVideo }),
             });
             return response;
         }
@@ -74,6 +93,19 @@ let VideoService = class VideoService {
             },
         });
         return response;
+    }
+    async downloadVideo(id) {
+        const video = await this.prisma.video.findUnique({
+            where: { codVideo: id },
+        });
+        if (video === null) {
+            throw new common_1.NotFoundException('Video não encontrada');
+        }
+        const filePath = path.join(__dirname, '..', '..', 'uploadvideos', video.ficheiroDoVideo);
+        if (!fs.existsSync(filePath)) {
+            throw new common_1.NotFoundException('Video não encontrada no sistema de arquivos');
+        }
+        return filePath;
     }
 };
 VideoService = __decorate([

@@ -1,6 +1,7 @@
 import { VideoService } from './video.service';
 import { AddVideoDto } from './dto/addVideoDto';
 import { UpdateVideoDto } from './dto/updateVideoDto';
+import { Response } from 'express';
 export declare class VideoController {
     private videoService;
     constructor(videoService: VideoService);
@@ -13,4 +14,5 @@ export declare class VideoController {
         artista: import(".prisma/client").artista;
         registadopor: import(".prisma/client").utilizador;
     })[]>;
+    downloadMusica(id: number, res: Response): Promise<void>;
 }

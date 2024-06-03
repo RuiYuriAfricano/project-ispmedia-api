@@ -64,7 +64,7 @@ model musica {
   codMusica          Int                  @id @default(autoincrement())
   tituloMusica       String
   ficheiroMusical    String
-  letra              String
+  letra              String               @db.Text
   generoMusical      String
   compositor         String
   capaMusica         String
@@ -97,7 +97,7 @@ model video {
   codVideo           Int                  @id @default(autoincrement())
   tituloVideo        String
   ficheiroDoVideo    String
-  legenda            String
+  legenda            String               @db.Text
   produtor           String
   generoDoVIdeo      String
   fkGrupoMusical     Int?

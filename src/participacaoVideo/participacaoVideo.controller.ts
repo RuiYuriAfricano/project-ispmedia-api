@@ -28,7 +28,7 @@ export class ParticipacaoVideoController {
     return this.participacaoVideoService.getOne(+id);
   }
 
-  @Get()
+  @Post()
   listarParticipacoes() {
     return this.participacaoVideoService.listarParticipacoes();
   }

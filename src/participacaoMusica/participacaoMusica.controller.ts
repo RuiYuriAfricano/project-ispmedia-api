@@ -28,7 +28,7 @@ export class ParticipacaoMusicaController {
     return this.participacaoMusicaService.getOne(+id);
   }
 
-  @Get()
+  @Post()
   listarParticipacoes() {
     return this.participacaoMusicaService.listarParticipacoes();
   }

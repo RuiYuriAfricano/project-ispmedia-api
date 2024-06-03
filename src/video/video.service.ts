@@ -57,9 +57,15 @@ export class VideoService {
       const response = await this.prisma.video.update({
         where: { codVideo: data.codVideo },
         data: {
-          ...data,
-          dataLancamento,
+          tituloVideo: data.tituloVideo,
+          ficheiroDoVideo: data.ficheiroDoVideo,
+          legenda: data.legenda,
+          produtor: data.produtor,
           generoDoVIdeo: data.generoDoVideo,
+          fkGrupoMusical: data.fkGrupoMusical,
+          fkArtista: data.fkArtista,
+          dataLancamento: dataLancamento,
+          fkUtilizador: data.fkUtilizador,
         },
       });
       return response;

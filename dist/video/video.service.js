@@ -61,7 +61,17 @@ let VideoService = class VideoService {
         try {
             const response = await this.prisma.video.update({
                 where: { codVideo: data.codVideo },
-                data: Object.assign(Object.assign({}, data), { dataLancamento, generoDoVIdeo: data.generoDoVideo }),
+                data: {
+                    tituloVideo: data.tituloVideo,
+                    ficheiroDoVideo: data.ficheiroDoVideo,
+                    legenda: data.legenda,
+                    produtor: data.produtor,
+                    generoDoVIdeo: data.generoDoVideo,
+                    fkGrupoMusical: data.fkGrupoMusical,
+                    fkArtista: data.fkArtista,
+                    dataLancamento: dataLancamento,
+                    fkUtilizador: data.fkUtilizador,
+                },
             });
             return response;
         }

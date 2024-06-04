@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Res, Delete, Body, Param, ParseIntPipe, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Put, Res, Delete, Body, HttpException, HttpStatus, Param, Headers, ParseIntPipe, UseInterceptors } from '@nestjs/common';
 import { MusicaService } from './musica.service';
 import { AddMusicaDto } from './dto/addMusicaDto';
 import { UpdateMusicaDto } from './dto/updateMusicaDto';
@@ -86,11 +86,21 @@ export class MusicaController {
   }
 
   @Get('downloadMusica/:id')
-  async downloadMusica(
+  async downloadMusic(
     @Param('id', ParseIntPipe) id: number,
     @Res() res: Response,
+    @Headers() headers
   ) {
-    const filePath = await this.musicaService.downloadMusica(id);
-    return res.sendFile(filePath);
+    const range = headers.range;
+
+    try {
+      const { headers: musicHeaders, filePath, start, end } = await this.musicaService.downloadMusic(Number(id), range);
+      const musicStream = fs.createReadStream(filePath, { start, end });
+
+      res.writeHead(range ? 206 : 200, musicHeaders);
+      musicStream.pipe(res);
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
   }
 }

@@ -22,7 +22,10 @@ let ParticipacaoMusicaController = class ParticipacaoMusicaController {
         this.participacaoMusicaService = participacaoMusicaService;
     }
     add(data) {
-        return this.participacaoMusicaService.add(data);
+        return this.participacaoMusicaService.add({
+            fkArtista: Number(data.fkArtista),
+            fkMusica: Number(data.fkMusica)
+        });
     }
     update(id, data) {
         return this.participacaoMusicaService.update(Object.assign(Object.assign({}, data), { codParticipacaoMusica: +id }));
@@ -67,7 +70,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ParticipacaoMusicaController.prototype, "getOne", null);
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Post)("listarParticipacaoMusica"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)

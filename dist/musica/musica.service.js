@@ -110,18 +110,40 @@ let MusicaService = class MusicaService {
         }
         return filePath;
     }
-    async downloadMusica(id) {
-        const musica = await this.prisma.musica.findUnique({
+    async downloadMusic(id, range) {
+        const music = await this.prisma.musica.findUnique({
             where: { codMusica: id },
         });
-        if (musica === null) {
-            throw new common_1.NotFoundException('Musica não encontrada');
+        if (!music) {
+            throw new common_1.NotFoundException('Música não encontrada');
         }
-        const filePath = path.join(__dirname, '..', '..', 'uploadmusicas', musica.ficheiroMusical);
+        const filePath = path.join(__dirname, '..', '..', 'uploadmusicas', music.ficheiroMusical);
         if (!fs.existsSync(filePath)) {
-            throw new common_1.NotFoundException('Musica não encontrada no sistema de arquivos');
+            throw new common_1.NotFoundException('Música não encontrada no sistema de arquivos');
         }
-        return filePath;
+        const fileStat = await fs.stat(filePath);
+        const fileSize = fileStat.size;
+        const CHUNK_SIZE = 100000;
+        if (range) {
+            const parts = range.replace(/bytes=/, '').split('-');
+            const start = parseInt(parts[0], 10);
+            const end = parts[1] ? parseInt(parts[1], 10) : Math.min(start + CHUNK_SIZE - 1, fileSize - 1);
+            const contentLength = end - start + 1;
+            const headers = {
+                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': contentLength,
+                'Content-Type': 'audio/mpeg',
+            };
+            return { headers, filePath, start, end };
+        }
+        else {
+            const headers = {
+                'Content-Length': fileSize,
+                'Content-Type': 'audio/mpeg',
+            };
+            return { headers, filePath, start: 0, end: fileSize - 1 };
+        }
     }
 };
 MusicaService = __decorate([

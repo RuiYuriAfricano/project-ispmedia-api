@@ -65,7 +65,12 @@ let ParticipacaoVideoService = class ParticipacaoVideoService {
         return response;
     }
     async listarParticipacoes() {
-        const response = await this.prisma.participacaoVideo.findMany();
+        const response = await this.prisma.participacaoVideo.findMany({
+            include: {
+                artista: true,
+                video: true,
+            },
+        });
         return response;
     }
 };

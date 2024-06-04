@@ -8,5 +8,8 @@ export declare class ParticipacaoVideoService {
     update(data: UpdateParticipacaoVideoDto): Promise<import(".prisma/client").participacaoVideo>;
     remove(id: number): Promise<import(".prisma/client").participacaoVideo>;
     getOne(id: number): Promise<import(".prisma/client").participacaoVideo>;
-    listarParticipacoes(): Promise<import(".prisma/client").participacaoVideo[]>;
+    listarParticipacoes(): Promise<(import(".prisma/client").participacaoVideo & {
+        artista: import(".prisma/client").artista;
+        video: import(".prisma/client").video;
+    })[]>;
 }

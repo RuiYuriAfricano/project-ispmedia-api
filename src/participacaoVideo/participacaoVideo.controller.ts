@@ -10,7 +10,10 @@ export class ParticipacaoVideoController {
 
   @Post()
   add(@Body() data: AddParticipacaoVideoDto) {
-    return this.participacaoVideoService.add(data);
+    return this.participacaoVideoService.add({
+      fkArtista: Number(data.fkArtista),
+      fkVideo: Number(data.fkVideo)
+    });
   }
 
   @Put(':id')
@@ -28,7 +31,7 @@ export class ParticipacaoVideoController {
     return this.participacaoVideoService.getOne(+id);
   }
 
-  @Post()
+  @Post("listarParticipacaoVideo")
   listarParticipacoes() {
     return this.participacaoVideoService.listarParticipacoes();
   }

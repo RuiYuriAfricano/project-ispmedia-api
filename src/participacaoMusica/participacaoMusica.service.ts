@@ -48,7 +48,12 @@ export class ParticipacaoMusicaService {
   }
 
   async listarParticipacoes() {
-    const response = await this.prisma.participacaoMusica.findMany();
+    const response = await this.prisma.participacaoMusica.findMany({
+      include: {
+        artista: true,
+        musica: true,
+      },
+    });
     return response;
   }
 }

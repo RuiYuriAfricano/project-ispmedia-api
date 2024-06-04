@@ -43,9 +43,17 @@ let MusicaController = class MusicaController {
         const filePath = await this.musicaService.downloadCapa(id);
         return res.sendFile(filePath);
     }
-    async downloadMusica(id, res) {
-        const filePath = await this.musicaService.downloadMusica(id);
-        return res.sendFile(filePath);
+    async downloadMusic(id, res, headers) {
+        const range = headers.range;
+        try {
+            const { headers: musicHeaders, filePath, start, end } = await this.musicaService.downloadMusic(Number(id), range);
+            const musicStream = fs.createReadStream(filePath, { start, end });
+            res.writeHead(range ? 206 : 200, musicHeaders);
+            musicStream.pipe(res);
+        }
+        catch (error) {
+            res.status(500).send(error.message);
+        }
     }
 };
 __decorate([
@@ -118,10 +126,11 @@ __decorate([
     (0, common_1.Get)('downloadMusica/:id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Res)()),
+    __param(2, (0, common_1.Headers)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number, Object, Object]),
     __metadata("design:returntype", Promise)
-], MusicaController.prototype, "downloadMusica", null);
+], MusicaController.prototype, "downloadMusic", null);
 MusicaController = __decorate([
     (0, common_1.Controller)('musica'),
     __metadata("design:paramtypes", [musica_service_1.MusicaService])

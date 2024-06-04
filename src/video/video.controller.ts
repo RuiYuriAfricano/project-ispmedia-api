@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseInterceptors, Res, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, UseInterceptors, Res, Put, Delete, Body, Param, ParseIntPipe, Headers } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { AddVideoDto } from './dto/addVideoDto';
 import { UpdateVideoDto } from './dto/updateVideoDto';
@@ -77,11 +77,22 @@ export class VideoController {
   }
 
   @Get('downloadVideo/:id')
-  async downloadMusica(
+  async downloadVideo(
     @Param('id', ParseIntPipe) id: number,
     @Res() res: Response,
+    @Headers() headers
   ) {
-    const filePath = await this.videoService.downloadVideo(id);
-    return res.sendFile(filePath);
+    const range = headers.range;
+
+    try {
+      const { headers: videoHeaders, filePath, start, end } = await this.videoService.downloadVideo(id, range);
+      const videoStream = fs.createReadStream(filePath, { start, end });
+
+      res.writeHead(range ? 206 : 200, videoHeaders);
+      videoStream.pipe(res);
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
   }
+
 }

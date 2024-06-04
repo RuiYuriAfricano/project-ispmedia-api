@@ -14,5 +14,5 @@ export declare class VideoController {
         artista: import(".prisma/client").artista;
         registadopor: import(".prisma/client").utilizador;
     })[]>;
-    downloadMusica(id: number, res: Response): Promise<void>;
+    downloadVideo(id: number, res: Response, headers: any): Promise<void>;
 }

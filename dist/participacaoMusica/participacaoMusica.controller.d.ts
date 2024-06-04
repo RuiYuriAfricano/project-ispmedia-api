@@ -8,5 +8,8 @@ export declare class ParticipacaoMusicaController {
     update(id: string, data: UpdateParticipacaoMusicaDto): Promise<import(".prisma/client").participacaoMusica>;
     remove(id: string): Promise<import(".prisma/client").participacaoMusica>;
     getOne(id: string): Promise<import(".prisma/client").participacaoMusica>;
-    listarParticipacoes(): Promise<import(".prisma/client").participacaoMusica[]>;
+    listarParticipacoes(): Promise<(import(".prisma/client").participacaoMusica & {
+        artista: import(".prisma/client").artista;
+        musica: import(".prisma/client").musica;
+    })[]>;
 }

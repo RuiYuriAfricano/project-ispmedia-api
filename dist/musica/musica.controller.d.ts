@@ -10,11 +10,11 @@ export declare class MusicaController {
     remove(id: number): Promise<import(".prisma/client").musica>;
     getOne(id: number): Promise<import(".prisma/client").musica>;
     listarMusicas(): Promise<(import(".prisma/client").musica & {
+        album: import(".prisma/client").album;
         grupoMusical: import(".prisma/client").grupoMusical;
         artista: import(".prisma/client").artista;
         registadopor: import(".prisma/client").utilizador;
-        album: import(".prisma/client").album;
     })[]>;
     downloadCapa(id: number, res: Response): Promise<void>;
-    downloadMusica(id: number, res: Response): Promise<void>;
+    downloadMusic(id: number, res: Response, headers: any): Promise<void>;
 }

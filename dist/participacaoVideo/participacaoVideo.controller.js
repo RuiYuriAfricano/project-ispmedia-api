@@ -22,7 +22,10 @@ let ParticipacaoVideoController = class ParticipacaoVideoController {
         this.participacaoVideoService = participacaoVideoService;
     }
     add(data) {
-        return this.participacaoVideoService.add(data);
+        return this.participacaoVideoService.add({
+            fkArtista: Number(data.fkArtista),
+            fkVideo: Number(data.fkVideo)
+        });
     }
     update(id, data) {
         return this.participacaoVideoService.update(Object.assign(Object.assign({}, data), { codParticipacaoVideo: +id }));
@@ -67,7 +70,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ParticipacaoVideoController.prototype, "getOne", null);
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Post)("listarParticipacaoVideo"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)

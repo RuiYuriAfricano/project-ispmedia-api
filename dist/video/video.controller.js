@@ -39,9 +39,17 @@ let VideoController = class VideoController {
     listarVideos() {
         return this.videoService.listarVideos();
     }
-    async downloadMusica(id, res) {
-        const filePath = await this.videoService.downloadVideo(id);
-        return res.sendFile(filePath);
+    async downloadVideo(id, res, headers) {
+        const range = headers.range;
+        try {
+            const { headers: videoHeaders, filePath, start, end } = await this.videoService.downloadVideo(id, range);
+            const videoStream = fs.createReadStream(filePath, { start, end });
+            res.writeHead(range ? 206 : 200, videoHeaders);
+            videoStream.pipe(res);
+        }
+        catch (error) {
+            res.status(500).send(error.message);
+        }
     }
 };
 __decorate([
@@ -106,10 +114,11 @@ __decorate([
     (0, common_1.Get)('downloadVideo/:id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Res)()),
+    __param(2, (0, common_1.Headers)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number, Object, Object]),
     __metadata("design:returntype", Promise)
-], VideoController.prototype, "downloadMusica", null);
+], VideoController.prototype, "downloadVideo", null);
 VideoController = __decorate([
     (0, common_1.Controller)('video'),
     __metadata("design:paramtypes", [video_service_1.VideoService])

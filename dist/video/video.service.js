@@ -104,18 +104,40 @@ let VideoService = class VideoService {
         });
         return response;
     }
-    async downloadVideo(id) {
+    async downloadVideo(id, range) {
         const video = await this.prisma.video.findUnique({
             where: { codVideo: id },
         });
-        if (video === null) {
+        if (!video) {
             throw new common_1.NotFoundException('Video não encontrada');
         }
         const filePath = path.join(__dirname, '..', '..', 'uploadvideos', video.ficheiroDoVideo);
         if (!fs.existsSync(filePath)) {
             throw new common_1.NotFoundException('Video não encontrada no sistema de arquivos');
         }
-        return filePath;
+        const fileStat = await fs.stat(filePath);
+        const fileSize = fileStat.size;
+        const CHUNK_SIZE = 100000;
+        if (range) {
+            const parts = range.replace(/bytes=/, '').split('-');
+            const start = parseInt(parts[0], 10);
+            const end = parts[1] ? parseInt(parts[1], 10) : Math.min(start + CHUNK_SIZE - 1, fileSize - 1);
+            const contentLength = end - start + 1;
+            const headers = {
+                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': contentLength,
+                'Content-Type': 'video/mp4',
+            };
+            return { headers, filePath, start, end };
+        }
+        else {
+            const headers = {
+                'Content-Length': fileSize,
+                'Content-Type': 'video/mp4',
+            };
+            return { headers, filePath, start: 0, end: fileSize - 1 };
+        }
     }
 };
 VideoService = __decorate([

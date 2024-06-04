@@ -13,5 +13,13 @@ export declare class VideoService {
         artista: import(".prisma/client").artista;
         registadopor: import(".prisma/client").utilizador;
     })[]>;
-    downloadVideo(id: number): Promise<string>;
+    downloadVideo(id: number, range?: string): Promise<{
+        headers: {
+            'Content-Length': any;
+            'Content-Type': string;
+        };
+        filePath: string;
+        start: number;
+        end: number;
+    }>;
 }

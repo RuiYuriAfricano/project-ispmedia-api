@@ -10,7 +10,10 @@ export class ParticipacaoMusicaController {
 
   @Post()
   add(@Body() data: AddParticipacaoMusicaDto) {
-    return this.participacaoMusicaService.add(data);
+    return this.participacaoMusicaService.add({
+      fkArtista: Number(data.fkArtista),
+      fkMusica: Number(data.fkMusica)
+    });
   }
 
   @Put(':id')
@@ -28,7 +31,7 @@ export class ParticipacaoMusicaController {
     return this.participacaoMusicaService.getOne(+id);
   }
 
-  @Post()
+  @Post("listarParticipacaoMusica")
   listarParticipacoes() {
     return this.participacaoMusicaService.listarParticipacoes();
   }

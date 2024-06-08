@@ -14,6 +14,7 @@ import { PartilhaDeConteudoModule } from './partilhaDeConteudo/partilhaDeConteud
 import { VideosDaPlaylistModule } from './videosDaPlaylist/videosDaPlaylist.module';
 import { GrupoDeAmigosModule } from './grupoDeAmigos/grupoDeAmigos.module';
 import { MembrosDosGruposModule } from './membrosDosGrupos/membrosDosGrupos.module';
+import { ListaDePartilhaModule } from './listaDePartilha/listaDePartilha.module';
 import { PrismaService } from './prisma/prisma.service';
 
 
@@ -21,7 +22,8 @@ import { PrismaService } from './prisma/prisma.service';
 @Module({
   imports: [UtilizadorModule, GrupoMusicalModule, ArtistaModule, AlbumModule, MusicaModule,
     VideoModule, ParticipacaoVideoModule, ParticipacaoMusicaModule, PlaylistModule, MusicasDaPlaylistModule,
-    PartilhaDeConteudoModule, VideosDaPlaylistModule, GrupoDeAmigosModule, MembrosDosGruposModule],
+    PartilhaDeConteudoModule, VideosDaPlaylistModule, GrupoDeAmigosModule, MembrosDosGruposModule,
+    ListaDePartilhaModule],
   providers: [PrismaService],
 })
 export class AppModule { }

@@ -124,38 +124,25 @@ model participacaoVideo {
 
 //Definição do modelo de utilizador
 model utilizador {
-  codUtilizador           Int                       @id @default(autoincrement())
-  username                String                    @unique
-  senha                   String
-  email                   String                    @unique
-  telefone                String                    @unique
-  tipoDeUtilizador        String //editor-naoEditor-admin
-  fotografia              String                    @default("userDefault.png")
-  criticas                criticas[]
-  partilhaDeConteudo      partilhaDeConteudo[]
-  playlist                playlist[]
-  grupoDeAmigos           grupoDeAmigos[]
-  membrosDosGrupos        membrosDosGrupos[]
-  ownersDosGrupos         ownersDosGrupos[]
-  PedidoDeAdicaoNosGrupos PedidoDeAdicaoNosGrupos[]
-  listaDePartilha         listaDePartilha[]
-  notificacao             notificacao[]
-  artista                 artista[]
-  grupoMusical            grupoMusical[]
-  album                   album[]
-  musica                  musica[]
-  video                   video[]
-}
-
-//Definição do modelo de criticas a um album
-model criticas {
-  codCritica   Int         @id @default(autoincrement())
-  fkAlbum      Int
-  fkUtilizador Int
-  pontuacao    Int
-  comentario   String
-  album        album?      @relation(fields: [fkAlbum], references: [codAlbum])
-  utilizador   utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
+  codUtilizador      Int                  @id @default(autoincrement())
+  username           String               @unique
+  senha              String
+  email              String               @unique
+  telefone           String               @unique
+  tipoDeUtilizador   String //editor-naoEditor-admin
+  fotografia         String               @default("userDefault.png")
+  criticas           criticas[]
+  partilhaDeConteudo partilhaDeConteudo[]
+  playlist           playlist[]
+  grupoDeAmigos      grupoDeAmigos[]
+  membrosDosGrupos   membrosDosGrupos[]
+  listaDePartilha    listaDePartilha[]
+  notificacao        notificacao[]
+  artista            artista[]
+  grupoMusical       grupoMusical[]
+  album              album[]
+  musica             musica[]
+  video              video[]
 }
 
 //Definição do modelo de partilha de conteudo
@@ -212,8 +199,6 @@ model grupoDeAmigos {
   tipoDeGrupo               String //privado ou publico
   utilizador                utilizador?                 @relation(fields: [fkCriador], references: [codUtilizador])
   membrosDosGrupos          membrosDosGrupos[]
-  ownersDosGrupos           ownersDosGrupos[]
-  PedidoDeAdicaoNosGrupos   PedidoDeAdicaoNosGrupos[]
   membrosDaListaDePartilhas membrosDaListaDePartilhas[]
   partilhaDeConteudo        partilhaDeConteudo[]
 }
@@ -223,27 +208,10 @@ model membrosDosGrupos {
   codMembro       Int            @id @default(autoincrement())
   fkGrupoDeAmigos Int
   fkUtilizador    Int
+  isOwner         Int //1-sim, 0-não
+  estado          Int //1-ativo 0-inactivo (quando for por meio de um pedido)
   utilizador      utilizador?    @relation(fields: [fkUtilizador], references: [codUtilizador])
   grupoDeAmigos   grupoDeAmigos? @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
-}
-
-//Definição do modelo de owners dos grupos de amigos
-model ownersDosGrupos {
-  codOwner        Int            @id @default(autoincrement())
-  fkGrupoDeAmigos Int
-  fkUtilizador    Int
-  utilizador      utilizador?    @relation(fields: [fkUtilizador], references: [codUtilizador])
-  grupoDeAmigos   grupoDeAmigos? @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
-}
-
-//Definição do modelo de pedido de adição nos grupos de amigos
-model PedidoDeAdicaoNosGrupos {
-  codPedido       Int            @id @default(autoincrement())
-  fkGrupoDeAmigos Int
-  fkUtilizador    Int
-  utilizador      utilizador?    @relation(fields: [fkUtilizador], references: [codUtilizador])
-  grupoDeAmigos   grupoDeAmigos? @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
-  estadoDoPedido  Int //0-rejeitado 1-aceite 
 }
 
 //Definição do modelo de lista de partilha
@@ -262,6 +230,17 @@ model membrosDaListaDePartilhas {
   fkListaDePartilha Int
   grupoDeAmigos     grupoDeAmigos?   @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
   listaDePartilha   listaDePartilha? @relation(fields: [fkListaDePartilha], references: [codListaDePartilha])
+}
+
+//Definição do modelo de criticas a um album
+model criticas {
+  codCritica   Int         @id @default(autoincrement())
+  fkAlbum      Int
+  fkUtilizador Int
+  pontuacao    Int
+  comentario   String
+  album        album?      @relation(fields: [fkAlbum], references: [codAlbum])
+  utilizador   utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
 }
 
 //Definição do modelo de notificação

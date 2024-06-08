@@ -29,8 +29,7 @@ export class ArtistaService {
           codArtista: data.codArtista,
         },
         data: {
-          ...data,
-          dataDeRegisto: new Date().toISOString(), // Update dataDeRegisto with current date
+          ...data
         },
       });
 

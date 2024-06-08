@@ -160,17 +160,19 @@ model criticas {
 
 //Definição do modelo de partilha de conteudo
 model partilhaDeConteudo {
-  codPartilha     Int         @id @default(autoincrement())
+  codPartilha     Int            @id @default(autoincrement())
   tipoDeConteudo  String //video, musica, album
-  fkVideo         Int
-  fkMusica        Int
-  fkAlbum         Int
+  fkVideo         Int?
+  fkMusica        Int?
+  fkAlbum         Int?
   fkGrupoDeAmigos Int
   fkUtilizador    Int
-  album           album?      @relation(fields: [fkAlbum], references: [codAlbum])
-  utilizador      utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
-  video           video?      @relation(fields: [fkVideo], references: [codVideo])
-  musica          musica?     @relation(fields: [fkMusica], references: [codMusica])
+  dataDePartilha  DateTime
+  album           album?         @relation(fields: [fkAlbum], references: [codAlbum])
+  utilizador      utilizador?    @relation(fields: [fkUtilizador], references: [codUtilizador])
+  video           video?         @relation(fields: [fkVideo], references: [codVideo])
+  musica          musica?        @relation(fields: [fkMusica], references: [codMusica])
+  grupoDeAmigos   grupoDeAmigos? @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
 }
 
 //Definição do modelo de playlist
@@ -213,6 +215,7 @@ model grupoDeAmigos {
   ownersDosGrupos           ownersDosGrupos[]
   PedidoDeAdicaoNosGrupos   PedidoDeAdicaoNosGrupos[]
   membrosDaListaDePartilhas membrosDaListaDePartilhas[]
+  partilhaDeConteudo        partilhaDeConteudo[]
 }
 
 //Definição do modelo de membro dos grupos de amigos

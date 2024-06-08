@@ -7,4 +7,4 @@ import { PrismaService } from 'src/prisma/prisma.service';
   controllers: [PartilhaDeConteudoController],
   providers: [PartilhaDeConteudoService, PrismaService],
 })
-export class ArtistaModule { }
+export class PartilhaDeConteudoModule { }

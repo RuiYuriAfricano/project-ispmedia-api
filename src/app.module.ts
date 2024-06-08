@@ -12,6 +12,7 @@ import { PlaylistModule } from './playlist/playlist.module';
 import { MusicasDaPlaylistModule } from './musicasDaPlaylist/musicasDaPlaylist.module';
 import { PartilhaDeConteudoModule } from './partilhaDeConteudo/partilhaDeConteudo.module';
 import { VideosDaPlaylistModule } from './videosDaPlaylist/videosDaPlaylist.module';
+import { GrupoDeAmigosModule } from './grupoDeAmigos/grupoDeAmigos.module';
 import { PrismaService } from './prisma/prisma.service';
 
 
@@ -19,7 +20,7 @@ import { PrismaService } from './prisma/prisma.service';
 @Module({
   imports: [UtilizadorModule, GrupoMusicalModule, ArtistaModule, AlbumModule, MusicaModule,
     VideoModule, ParticipacaoVideoModule, ParticipacaoMusicaModule, PlaylistModule, MusicasDaPlaylistModule,
-    PartilhaDeConteudoModule, VideosDaPlaylistModule],
+    PartilhaDeConteudoModule, VideosDaPlaylistModule, GrupoDeAmigosModule],
   providers: [PrismaService],
 })
 export class AppModule { }

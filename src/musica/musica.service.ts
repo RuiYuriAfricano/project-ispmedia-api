@@ -82,6 +82,12 @@ export class MusicaService {
   async getOne(id: number) {
     const response = await this.prisma.musica.findUnique({
       where: { codMusica: id },
+      include: {
+        album: true,
+        grupoMusical: true,
+        artista: true,
+        registadopor: true,
+      },
     });
     if (!response) {
       throw new NotFoundException(`Musica with ID ${id} not found`);

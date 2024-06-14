@@ -76,26 +76,44 @@ export class PlaylistService {
       },
       include: {
         MusicasDaPlaylist: {
-          include: {
+          select: {
+            codMusicasDaPlayList: true,
             musica: {
               select: {
                 codMusica: true,
                 tituloMusica: true,
-                grupoMusical: true,
-                artista: true,
+                grupoMusical: {
+                  select: {
+                    nomeGrupoMusical: true,
+                  },
+                },
+                artista: {
+                  select: {
+                    nomeArtista: true,
+                  },
+                },
                 fkArtista: true,
               },
             },
           },
         },
         videosDaPlaylist: {
-          include: {
+          select: {
+            codVideosDaPlayList: true,
             video: {
               select: {
                 codVideo: true,
                 tituloVideo: true,
-                grupoMusical: true,
-                artista: true,
+                grupoMusical: {
+                  select: {
+                    nomeGrupoMusical: true,
+                  },
+                },
+                artista: {
+                  select: {
+                    nomeArtista: true,
+                  },
+                },
                 fkArtista: true,
               },
             },
@@ -113,11 +131,13 @@ export class PlaylistService {
     // Adiciona músicas à lista de resultados
     if (playlist.MusicasDaPlaylist.length > 0) {
       for (const item of playlist.MusicasDaPlaylist) {
+        const musica = item.musica;
         resultados.push({
-          codigo: item.musica.codMusica,
-          titulo: item.musica.tituloMusica,
+          codigo: musica.codMusica,
+          titulo: musica.tituloMusica,
+          codigoConteudoDaPlayList: item.codMusicasDaPlayList,
           tipo: 'musica',
-          autor: item.musica.fkArtista ? item.musica.artista.nomeArtista : item.musica.grupoMusical.nomeGrupoMusical,
+          autor: musica.fkArtista ? musica.artista.nomeArtista : musica.grupoMusical.nomeGrupoMusical,
         });
       }
     }
@@ -125,17 +145,20 @@ export class PlaylistService {
     // Adiciona vídeos à lista de resultados
     if (playlist.videosDaPlaylist.length > 0) {
       for (const item of playlist.videosDaPlaylist) {
+        const video = item.video;
         resultados.push({
-          codigo: item.video.codVideo,
-          titulo: item.video.tituloVideo,
+          codigo: video.codVideo,
+          titulo: video.tituloVideo,
+          codigoConteudoDaPlayList: item.codVideosDaPlayList,
           tipo: 'video',
-          autor: item.video.fkArtista ? item.video.artista.nomeArtista : item.video.grupoMusical.nomeGrupoMusical,
+          autor: video.fkArtista ? video.artista.nomeArtista : video.grupoMusical.nomeGrupoMusical,
         });
       }
     }
 
     return resultados;
   }
+
 
   async pesquisarMusicasEVideosPorTitulo(palavraChave) {
     const musicas = await this.prisma.musica.findMany({

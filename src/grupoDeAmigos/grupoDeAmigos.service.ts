@@ -61,7 +61,6 @@ export class GrupoDeAmigosService {
         },
         membrosDosGrupos: true,
         membrosDaListaDePartilhas: true,
-        partilhaDeConteudo: true,
       },
     });
 

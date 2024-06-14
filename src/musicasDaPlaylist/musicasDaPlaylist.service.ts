@@ -34,7 +34,7 @@ export class MusicasDaPlaylistService {
 
   async remove(id: number) {
     const response = await this.prisma.musicasDaPlaylist.delete({
-      where: { codMusicasDaPlayList: id },
+      where: { codMusicasDaPlayList: id, },
     });
     return response;
   }

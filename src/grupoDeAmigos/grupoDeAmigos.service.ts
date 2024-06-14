@@ -60,8 +60,6 @@ export class GrupoDeAmigosService {
           },
         },
         membrosDosGrupos: true,
-        ownersDosGrupos: true,
-        PedidoDeAdicaoNosGrupos: true,
         membrosDaListaDePartilhas: true,
         partilhaDeConteudo: true,
       },

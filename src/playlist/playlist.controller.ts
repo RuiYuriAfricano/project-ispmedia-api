@@ -31,4 +31,27 @@ export class PlaylistController {
   listarPlaylists() {
     return this.playlistService.listarPlaylists();
   }
+
+  // Método para obter músicas e vídeos de uma playlist por ID usando POST
+  @Post(':id/videos-e-musicas')
+  async getVideosEMusicasDaPlaylist(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const resultados = await this.playlistService.pesquisarVideosEMusicasDaPlaylistPorId(id);
+      return { success: true, data: resultados };
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  }
+
+  // Método para pesquisar músicas e vídeos por título
+  @Post('pesquisar')
+  async pesquisarMusicasEVideosPorTitulo(@Body() body: { palavraChave: string }) {
+    try {
+      const resultados = await this.playlistService.pesquisarMusicasEVideosPorTitulo(body.palavraChave);
+      return { success: true, data: resultados };
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  }
+
 }

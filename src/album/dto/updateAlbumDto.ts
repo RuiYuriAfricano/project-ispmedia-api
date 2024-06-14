@@ -7,6 +7,7 @@ export class UpdateAlbumDto {
     capaAlbum?: string;
     dataLancamento?: Date;
     fkArtista?: number;
+    fkGrupoDeAmigos?: number;
     fkGrupoMusical?: number;
     fkUtilizador?: number;
 }

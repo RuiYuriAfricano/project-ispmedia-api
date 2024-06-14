@@ -8,6 +8,7 @@ export class UpdateVideoDto {
     generoDoVideo?: string;
     fkGrupoMusical?: number;
     fkArtista?: number;
+    fkGrupoDeAmigos?: number;
     dataLancamento?: Date;
     fkUtilizador?: number;
 }

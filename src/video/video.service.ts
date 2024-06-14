@@ -84,6 +84,11 @@ export class VideoService {
   async getOne(id: number) {
     const response = await this.prisma.video.findUnique({
       where: { codVideo: id },
+      include: {
+        grupoMusical: true,
+        artista: true,
+        registadopor: true,
+      },
     });
     if (!response) {
       throw new NotFoundException(`Video with ID ${id} not found`);

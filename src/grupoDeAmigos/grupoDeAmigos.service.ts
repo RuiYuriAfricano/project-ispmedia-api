@@ -203,4 +203,82 @@ export class GrupoDeAmigosService {
 
     return resultados;
   }
+
+  async pesquisarMusicasVideosEAlbumPorTitulo(palavraChave) {
+    const musicas = await this.prisma.musica.findMany({
+      where: {
+        OR: [
+          { tituloMusica: { contains: palavraChave } },
+          { letra: { contains: palavraChave } }, // Também pode pesquisar na letra da música se necessário
+        ],
+      },
+      select: {
+        codMusica: true,
+        tituloMusica: true,
+      },
+    });
+
+    const videos = await this.prisma.video.findMany({
+      where: {
+        OR: [
+          { tituloVideo: { contains: palavraChave } },
+          { legenda: { contains: palavraChave } }, // Também pode pesquisar na legenda do vídeo se necessário
+        ],
+      },
+      select: {
+        codVideo: true,
+        tituloVideo: true,
+      },
+    });
+
+    const albuns = await this.prisma.album.findMany({
+      where: {
+        OR: [
+          { tituloAlbum: { contains: palavraChave } },
+          { descricao: { contains: palavraChave } }, // Também pode pesquisar na descriçao do album se necessário
+        ],
+      },
+      select: {
+        codAlbum: true,
+        tituloAlbum: true,
+      },
+    });
+
+    const resultados = [];
+
+    // Adiciona músicas aos resultados
+    if (musicas.length > 0) {
+      for (const musica of musicas) {
+        resultados.push({
+          codigo: musica.codMusica,
+          titulo: musica.tituloMusica,
+          tipo: 'musica',
+        });
+      }
+    }
+
+    // Adiciona vídeos aos resultados
+    if (videos.length > 0) {
+      for (const video of videos) {
+        resultados.push({
+          codigo: video.codVideo,
+          titulo: video.tituloVideo,
+          tipo: 'video',
+        });
+      }
+    }
+
+    // Adiciona albuns aos resultados
+    if (albuns.length > 0) {
+      for (const album of albuns) {
+        resultados.push({
+          codigo: album.codAlbum,
+          titulo: album.tituloAlbum,
+          tipo: 'album',
+        });
+      }
+    }
+
+    return resultados;
+  }
 }

@@ -182,7 +182,7 @@ model grupoDeAmigos {
   codGrupoDeAmigos          Int                         @id @default(autoincrement())
   nomeDoGrupo               String
   fkCriador                 Int
-  tipoDeGrupo               String //privado ou publico
+  dataDeCriacao             DateTime
   utilizador                utilizador?                 @relation(fields: [fkCriador], references: [codUtilizador])
   membrosDosGrupos          membrosDosGrupos[]
   membrosDaListaDePartilhas membrosDaListaDePartilhas[]

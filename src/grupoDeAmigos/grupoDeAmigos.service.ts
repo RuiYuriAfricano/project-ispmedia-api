@@ -9,6 +9,7 @@ export class GrupoDeAmigosService {
 
   async add(data: AddGrupoDeAmigosDto) {
     try {
+      data.dataDeCriacao = new Date().toISOString();
       const response = await this.prisma.grupoDeAmigos.create({
         data,
       });

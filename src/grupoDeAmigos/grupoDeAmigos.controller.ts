@@ -31,4 +31,26 @@ export class GrupoDeAmigosController {
   listarGruposDeAmigos() {
     return this.grupoDeAmigosService.listarGruposDeAmigos();
   }
+
+  // Método para obter músicas e vídeos e albuns de um grupo por ID usando POST
+  @Post(':id/videos-musicas-e-albuns')
+  async getVideosMusicasEAlbunsDoGrupo(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const resultados = await this.grupoDeAmigosService.pesquisarVideosMusicasEAlbunsDoGrupoPorId(id);
+      return { success: true, data: resultados };
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  }
+
+  // Método para pesquisar músicas e vídeos por título
+  @Post('pesquisar')
+  async pesquisarVideosMusicasEAlbunsDoGrupoPorTitulo(@Body() body: { palavraChave: string }) {
+    try {
+      const resultados = await this.grupoDeAmigosService.pesquisarMusicasVideosEAlbumPorTitulo(body.palavraChave);
+      return { success: true, data: resultados };
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  }
 }

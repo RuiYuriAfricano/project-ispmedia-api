@@ -67,4 +67,140 @@ export class GrupoDeAmigosService {
 
     return response;
   }
+
+  async pesquisarVideosMusicasEAlbunsDoGrupoPorId(idGrupo) {
+    const grupo = await this.prisma.grupoDeAmigos.findUnique({
+      where: {
+        codGrupoDeAmigos: idGrupo,
+      },
+      include: {
+        conteudosDosGrupos: {
+          select: {
+            codConteudo: true,
+            fkAlbum: true,
+            fkMusica: true,
+            fkVideo: true,
+            musica: {
+              select: {
+                codMusica: true,
+                tituloMusica: true,
+                grupoMusical: {
+                  select: {
+                    nomeGrupoMusical: true,
+                  },
+                },
+                artista: {
+                  select: {
+                    nomeArtista: true,
+                  },
+                },
+                fkArtista: true,
+              },
+            },
+            video: {
+              select: {
+                codVideo: true,
+                tituloVideo: true,
+                grupoMusical: {
+                  select: {
+                    nomeGrupoMusical: true,
+                  },
+                },
+                artista: {
+                  select: {
+                    nomeArtista: true,
+                  },
+                },
+                fkArtista: true,
+              },
+            },
+            album: {
+              select: {
+                codAlbum: true,
+                tituloAlbum: true,
+                grupoMusical: {
+                  select: {
+                    nomeGrupoMusical: true,
+                  },
+                },
+                artista: {
+                  select: {
+                    nomeArtista: true,
+                  },
+                },
+                fkArtista: true,
+                musica: {
+                  select: {
+                    codMusica: true,
+                    tituloMusica: true,
+                    grupoMusical: {
+                      select: {
+                        nomeGrupoMusical: true,
+                      },
+                    },
+                    artista: {
+                      select: {
+                        nomeArtista: true,
+                      },
+                    },
+                    fkArtista: true,
+                  },
+                },
+
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!grupo) {
+      throw new Error(`Group com o ID '${idGrupo}' não encontrado.`);
+    }
+
+    const resultados = [];
+
+    // Adiciona músicas à lista de resultados
+    if (grupo.conteudosDosGrupos.length > 0) {
+      for (const item of grupo.conteudosDosGrupos) {
+
+        if (item.fkMusica) {
+          const musica = item.musica;
+          resultados.push({
+            codigo: musica.codMusica,
+            titulo: musica.tituloMusica,
+            codigoConteudo: item.codConteudo,
+            tipo: 'musica',
+            autor: musica.fkArtista ? musica.artista.nomeArtista : musica.grupoMusical.nomeGrupoMusical,
+          });
+        }
+        if (item.fkVideo) {
+          const video = item.video;
+          resultados.push({
+            codigo: video.codVideo,
+            titulo: video.tituloVideo,
+            codigoConteudo: item.codConteudo,
+            tipo: 'video',
+            autor: video.fkArtista ? video.artista.nomeArtista : video.grupoMusical.nomeGrupoMusical,
+          });
+        }
+        if (item.fkAlbum) {
+          const album = item.album;
+          resultados.push({
+            codigo: album.codAlbum,
+            titulo: album.tituloAlbum,
+            codigoConteudo: item.codConteudo,
+            tipo: 'album',
+            musicasDoAlbum: item.album.musica,
+            autor: album.fkArtista ? album.artista.nomeArtista : album.grupoMusical.nomeGrupoMusical,
+          });
+        }
+
+
+      }
+    }
+
+
+    return resultados;
+  }
 }

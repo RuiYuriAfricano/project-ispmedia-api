@@ -9,7 +9,6 @@ export class AddMusicaDto {
     fkAlbum?: number;
     fkGrupoMusical?: number;
     fkArtista?: number;
-    fkGrupoDeAmigos?: number;
     dataLancamento: string;
     dataDeRegisto: string;
     fkUtilizador: number;

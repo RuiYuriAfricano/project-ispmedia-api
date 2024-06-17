@@ -12,4 +12,5 @@ export class UpdateMusicaDto {
     fkArtista?: number;
     dataLancamento?: Date;
     fkUtilizador?: number;
+    visibilidade?: string;
 }

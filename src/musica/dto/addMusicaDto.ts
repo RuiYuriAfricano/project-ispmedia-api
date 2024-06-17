@@ -12,4 +12,5 @@ export class AddMusicaDto {
     dataLancamento: string;
     dataDeRegisto: string;
     fkUtilizador: number;
+    visibilidade?: string;
 }

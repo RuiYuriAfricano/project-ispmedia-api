@@ -10,4 +10,5 @@ export class UpdateVideoDto {
     fkArtista?: number;
     dataLancamento?: Date;
     fkUtilizador?: number;
+    visibilidade?: string;
 }

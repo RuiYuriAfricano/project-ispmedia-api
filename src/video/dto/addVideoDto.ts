@@ -10,4 +10,5 @@ export class AddVideoDto {
     dataLancamento: string;
     fkUtilizador: number;
     dataDeRegisto: string;
+    visibilidade?: string;
 }

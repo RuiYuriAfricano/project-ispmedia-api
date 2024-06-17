@@ -17,6 +17,11 @@ export class ConteudoDosGruposController {
     return this.conteudoDosGruposService.update(data);
   }
 
+  @Put("atualizar-conteudo-do-grupo")
+  updateFk(@Body() data: UpdateConteudoDosGruposDto) {
+    return this.conteudoDosGruposService.updatePorFk(data);
+  }
+
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.conteudoDosGruposService.remove(id);

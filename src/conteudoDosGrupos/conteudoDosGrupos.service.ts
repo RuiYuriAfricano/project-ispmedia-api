@@ -32,6 +32,37 @@ export class ConteudoDosGruposService {
     }
   }
 
+  async updatePorFk(data: UpdateConteudoDosGruposDto) {
+    try {
+      const conteudoDoGrupo = await this.prisma.conteudosDosGrupos.findFirst({
+        where: {
+          fkGrupoDeAmigos: data.fkGrupoDeAmigos,
+          OR: [
+            data.fkMusica !== null && { fkMusica: data.fkMusica },
+            data.fkAlbum !== null && { fkAlbum: data.fkAlbum },
+            data.fkVideo !== null && { fkVideo: data.fkVideo }
+          ].filter(Boolean) // Filtra para remover valores nulos
+        }
+      });
+
+      if (!conteudoDoGrupo) {
+        throw new Error(`conteudoDoGrupo not found for fkGrupoDeAmigos ${data.fkGrupoDeAmigos}`);
+      }
+
+      const response = await this.prisma.conteudosDosGrupos.update({
+        where: {
+          codConteudo: conteudoDoGrupo.codConteudo // Utilizando o ID do primeiro resultado encontrado
+        },
+        data,
+      });
+
+      return response;
+    } catch (error) {
+      throw new Error(`Failed to update conteudo in group: ${error.message}`);
+    }
+  }
+
+
   async remove(id: number) {
     const response = await this.prisma.conteudosDosGrupos.delete({
       where: { codConteudo: id, },

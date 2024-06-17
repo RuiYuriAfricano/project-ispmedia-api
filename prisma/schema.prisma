@@ -7,12 +7,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum Visibilidade {
-    Publico
-    Privado
-    PlaylistPrivado
-}
-
 // Definição do modelo Album
 model album {
     codAlbum                      Int                  @id @default(autoincrement())
@@ -25,7 +19,7 @@ model album {
     fkArtista                     Int?
     fkGrupoMusical                Int?
     fkUtilizador                  Int
-    visibilidade                  Visibilidade         @default(Publico)
+    visibilidade                  String               @default("Publico") //Publico-Privado
     registadopor                  utilizador?          @relation(fields: [fkUtilizador], references: [codUtilizador])
     artista                       artista?             @relation(fields: [fkArtista], references: [codArtista])
     grupoMusical                  grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
@@ -80,6 +74,7 @@ model musica {
     fkAlbum                       Int?
     fkGrupoMusical                Int?
     fkArtista                     Int?
+    visibilidade                  String               @default("Publico") //Publico-Privado-PlayListPrivada
     album                         album?               @relation(fields: [fkAlbum], references: [codAlbum])
     grupoMusical                  grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
     artista                       artista?             @relation(fields: [fkArtista], references: [codArtista])
@@ -113,6 +108,7 @@ model video {
     generoDoVIdeo                 String
     fkGrupoMusical                Int?
     fkArtista                     Int?
+    visibilidade                  String               @default("Publico") //Publico-Privado-PlayListPrivada
     grupoMusical                  grupoMusical?        @relation(fields: [fkGrupoMusical], references: [codGrupoMusical])
     artista                       artista?             @relation(fields: [fkArtista], references: [codArtista])
     dataLancamento                DateTime

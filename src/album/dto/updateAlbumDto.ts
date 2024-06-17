@@ -9,5 +9,5 @@ export class UpdateAlbumDto {
     fkArtista?: number;
     fkGrupoMusical?: number;
     fkUtilizador?: number;
-    visibilidade?: number;
+    visibilidade?: string;
 }

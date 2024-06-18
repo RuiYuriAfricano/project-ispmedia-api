@@ -52,7 +52,10 @@ export class UtilizadorController {
 
   @Put()
   update(@Body() data: UpdateUtilizadorDto) {
-    return this.utilizadorService.update(data);
+    return this.utilizadorService.update({
+      ...data,
+      "codUtilizador": Number(data.codUtilizador)
+    });
   }
 
   @Delete(':id')

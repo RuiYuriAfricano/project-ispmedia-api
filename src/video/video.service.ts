@@ -4,7 +4,7 @@ import { UpdateVideoDto } from './dto/updateVideoDto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-
+import * as ffmpeg from 'fluent-ffmpeg';
 @Injectable()
 export class VideoService {
   constructor(private prisma: PrismaService) { }
@@ -150,5 +150,33 @@ export class VideoService {
     }
   }
 
+  async getThumbnail(id: number) {
+    const video = await this.prisma.video.findUnique({
+      where: { codVideo: id },
+    });
+    if (!video) {
+      throw new NotFoundException('Video não encontrada');
+    }
+
+    const videoPath = path.join(__dirname, '..', '..', 'uploadvideos', video.ficheiroDoVideo);
+    if (!fs.existsSync(videoPath)) {
+      throw new NotFoundException('Video não encontrada no sistema de arquivos');
+    }
+
+    const thumbnailPath = path.join(__dirname, '..', '..', 'uploadvideos', 'thumbnails', `${video.codVideo}.png`);
+    await fs.ensureDir(path.dirname(thumbnailPath));
+
+    return new Promise<string>((resolve, reject) => {
+      ffmpeg(videoPath)
+        .screenshots({
+          count: 1,
+          folder: path.dirname(thumbnailPath),
+          filename: path.basename(thumbnailPath),
+          size: '320x240',
+        })
+        .on('end', () => resolve(thumbnailPath))
+        .on('error', (err) => reject(new Error(`Failed to generate thumbnail: ${err.message}`)));
+    });
+  }
 
 }

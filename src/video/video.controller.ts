@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseInterceptors, Res, Put, Delete, Body, Param, ParseIntPipe, Headers } from '@nestjs/common';
+import { Controller, Get, Post, UseInterceptors, NotFoundException, Res, Put, Delete, Body, Param, ParseIntPipe, Headers } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { AddVideoDto } from './dto/addVideoDto';
 import { UpdateVideoDto } from './dto/updateVideoDto';
@@ -92,6 +92,23 @@ export class VideoController {
       videoStream.pipe(res);
     } catch (error) {
       res.status(500).send(error.message);
+    }
+  }
+
+  @Get(':id/thumbnail')
+  async getThumbnail(@Param('id') id: string, @Res() res: Response) {
+    try {
+      const videoId = parseInt(id, 10);
+      if (isNaN(videoId)) {
+        throw new NotFoundException('Invalid video ID');
+      }
+      const thumbnailPath = await this.videoService.getThumbnail(videoId);
+      if (!fs.existsSync(thumbnailPath)) {
+        throw new NotFoundException('Thumbnail not found');
+      }
+      res.sendFile(thumbnailPath);
+    } catch (error) {
+      throw new NotFoundException(error.message);
     }
   }
 

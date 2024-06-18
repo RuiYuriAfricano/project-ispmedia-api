@@ -138,8 +138,10 @@ model utilizador {
     senha            String
     email            String             @unique
     telefone         String             @unique
-    tipoDeUtilizador String //editor-naoEditor-admin
+    tipoDeUtilizador String //normal-admin
     fotografia       String             @default("userDefault.png")
+    estado           String             @default("ativo") //ativo-pendente-inativo
+    codVerificacao   String?
     criticas         criticas[]
     playlist         playlist[]
     grupoDeAmigos    grupoDeAmigos[]

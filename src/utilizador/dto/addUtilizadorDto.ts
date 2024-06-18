@@ -4,6 +4,8 @@ export class AddUtilizadorDto {
     senha: string
     email: string
     telefone: string
-    tipoDeUtilizador: string //editor-naoEditor-admin
+    tipoDeUtilizador: string //normal-admin
     fotografia: string
+    estado: string //ativo-pendente-inativo
+    codVerificacao?: string
 }

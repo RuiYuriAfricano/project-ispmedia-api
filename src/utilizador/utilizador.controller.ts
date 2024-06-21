@@ -12,6 +12,7 @@ import {
   UploadedFile,
   Res,
   Query,
+  Headers,
 } from '@nestjs/common';
 import { UtilizadorService } from './utilizador.service';
 import { AddUtilizadorDto } from './dto/addUtilizadorDto';
@@ -19,6 +20,7 @@ import { UpdateUtilizadorDto } from './dto/updateUtilizadorDto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Response } from 'express';
+import * as path from 'path';
 
 @Controller('utilizador')
 export class UtilizadorController {
@@ -45,9 +47,31 @@ export class UtilizadorController {
       })
     })
   )
-  add(@Body() data: AddUtilizadorDto,
+  async add(@Body() data: AddUtilizadorDto,
     @UploadedFile() file: Express.Multer.File) {
-    return this.utilizadorService.add(data);
+
+    const response = this.utilizadorService.add(data);
+
+
+    if (data.fotografia === "") {
+      return response;
+    }
+
+    const utilizadorData = new UpdateUtilizadorDto()
+
+
+    // Compress the img da capa and remove metadata
+    const imgPath = path.join('upload', data.fotografia);
+    const compressedImgPath = await this.utilizadorService.convertAndResizeImageToJPG(imgPath);
+    // Obtém apenas o nome do arquivo e a extensão
+    const fileName = path.basename(compressedImgPath);
+    utilizadorData.fotografia = fileName;
+    utilizadorData.codUtilizador = (await response).codUtilizador;
+    // Update the video with the new file path
+    await this.utilizadorService.update(utilizadorData);
+
+
+    return response;
   }
 
   @Put()
@@ -75,7 +99,13 @@ export class UtilizadorController {
 
   // Exemplo de chamada do método downloadFoto no UtilizadorController
   @Get('download/:username')
-  async downloadFoto(@Param('username') username: string, @Res() res: Response) {
+  async downloadFoto(@Param('username') username: string, @Res() res: Response
+    , @Headers() headers
+  ) {
+
+    if (headers.referer !== 'http://localhost:3000/') {
+      return res.status(403).send('Forbidden');
+    }
     const filePath = await this.utilizadorService.downloadFoto(username);
     return res.sendFile(filePath);
   }

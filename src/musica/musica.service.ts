@@ -4,6 +4,8 @@ import { UpdateMusicaDto } from './dto/updateMusicaDto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as ffmpeg from 'fluent-ffmpeg';
+import { parse, format } from 'path';
 import { createReadStream, existsSync, statSync } from 'fs';
 import { join } from 'path';
 import * as rangeParser from 'range-parser';
@@ -167,5 +169,59 @@ export class MusicaService {
     }
   }
 
+  async convertAudioToMP3(audioPath: string): Promise<string> {
+    const outputPath = audioPath.replace(/(\.\w+)$/, '-converted.mp3');
+
+    return new Promise<string>((resolve, reject) => {
+      ffmpeg(audioPath)
+        .outputOptions([
+          '-codec:a libmp3lame', // MP3 codec
+          '-b:a 128k', // Set the audio bitrate to 128kbps
+          '-qscale:a 5', // Adjust quality scale (0-9, where lower is better quality)
+          '-map_metadata -1' // Remove all metadata
+        ])
+        .save(outputPath)
+        .on('end', () => {
+          console.log(`Audio conversion finished: ${outputPath}`);
+          resolve(outputPath);
+        })
+        .on('error', (err) => {
+          console.error(`Failed to convert audio: ${err.message}`);
+          reject(new Error(`Failed to convert audio: ${err.message}`));
+        });
+    });
+  }
+  async convertAndResizeImageToJPG(imagePath: string): Promise<string> {
+    const parsedPath = parse(imagePath);
+    const outputDir = parsedPath.dir;
+    const outputPath = format({
+      dir: outputDir,
+      name: parsedPath.name + '-compressed',
+      ext: '.jpg'
+    });
+
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+
+    return new Promise<string>((resolve, reject) => {
+      ffmpeg(imagePath)
+        .outputOptions([
+          '-vf scale=128:128', // Resize to 128x128 pixels
+          '-q:v 5', // Quality level
+          '-format jpeg', // Convert to JPEG
+          '-map_metadata -1' // Remove all metadata
+        ])
+        .save(outputPath)
+        .on('end', () => {
+          console.log(`Image conversion and resizing finished: ${outputPath}`);
+          resolve(outputPath);
+        })
+        .on('error', (err) => {
+          console.error(`Failed to convert and resize image: ${err.message}`);
+          reject(new Error(`Failed to convert and resize image: ${err.message}`));
+        });
+    });
+  }
 
 }

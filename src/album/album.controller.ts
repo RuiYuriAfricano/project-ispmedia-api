@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Res,
+  Headers,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { AddAlbumDto } from './dto/addAlbumDto';
@@ -39,13 +40,29 @@ export class AlbumController {
       }),
     }),
   )
-  add(@Body() data: AddAlbumDto, @UploadedFile() file: Express.Multer.File) {
-    return this.albumService.add({
+  async add(@Body() data: AddAlbumDto, @UploadedFile() file: Express.Multer.File) {
+    const response = this.albumService.add({
       ...data,
       "fkUtilizador": Number(data.fkUtilizador),
       "fkArtista": Number(data.fkArtista) || null,
       "fkGrupoMusical": Number(data.fkGrupoMusical) || null
     });
+
+    const albumData = new UpdateAlbumDto()
+
+
+    // Compress the img da capa and remove metadata
+    const imgPath = path.join('uploadcapasalbum', data.capaAlbum);
+    const compressedImgPath = await this.albumService.convertAndResizeImageToJPG(imgPath);
+    // Obtém apenas o nome do arquivo e a extensão
+    const fileName = path.basename(compressedImgPath);
+    albumData.capaAlbum = fileName;
+    albumData.codAlbum = (await response).codAlbum;
+    albumData.dataLancamento = (await response).dataLancamento;
+    // Update the video with the new file path
+    await this.albumService.update(albumData);
+
+    return response;
   }
 
   @Put()
@@ -108,7 +125,12 @@ export class AlbumController {
   async downloadCapa(
     @Param('id', ParseIntPipe) id: number,
     @Res() res: Response,
+    @Headers() headers
   ) {
+
+    if (headers.referer !== 'http://localhost:3000/') {
+      return res.status(403).send('Forbidden');
+    }
     const filePath = await this.albumService.downloadCapa(id);
     return res.sendFile(filePath);
   }

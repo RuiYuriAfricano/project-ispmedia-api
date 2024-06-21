@@ -5,6 +5,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as winattr from 'winattr'; // Import winattr to set hidden attribute
+import * as ffmpeg from 'fluent-ffmpeg';
+import { parse, format } from 'path';
 
 @Injectable()
 export class AlbumService {
@@ -126,5 +128,37 @@ export class AlbumService {
 
 
     return filePath;
+  }
+  async convertAndResizeImageToJPG(imagePath: string): Promise<string> {
+    const parsedPath = parse(imagePath);
+    const outputDir = parsedPath.dir;
+    const outputPath = format({
+      dir: outputDir,
+      name: parsedPath.name + '-compressed',
+      ext: '.jpg'
+    });
+
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+
+    return new Promise<string>((resolve, reject) => {
+      ffmpeg(imagePath)
+        .outputOptions([
+          '-vf scale=128:128', // Resize to 128x128 pixels
+          '-q:v 5', // Quality level
+          '-format jpeg', // Convert to JPEG
+          '-map_metadata -1' // Remove all metadata
+        ])
+        .save(outputPath)
+        .on('end', () => {
+          console.log(`Image conversion and resizing finished: ${outputPath}`);
+          resolve(outputPath);
+        })
+        .on('error', (err) => {
+          console.error(`Failed to convert and resize image: ${err.message}`);
+          reject(new Error(`Failed to convert and resize image: ${err.message}`));
+        });
+    });
   }
 }

@@ -6,7 +6,7 @@ import { diskStorage } from 'multer';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import * as fs from 'fs-extra';
-
+import * as path from 'path';
 
 @Controller('video')
 export class VideoController {
@@ -27,13 +27,31 @@ export class VideoController {
       }),
     }),
   )
-  add(@Body() data: AddVideoDto) {
-    return this.videoService.add({
+  async add(@Body() data: AddVideoDto) {
+    const videoData = {
       ...data,
       "fkUtilizador": Number(data.fkUtilizador),
       "fkArtista": Number(data.fkArtista) || null,
       "fkGrupoMusical": Number(data.fkGrupoMusical) || null,
-    });
+    };
+
+    const response = await this.videoService.add(videoData);
+
+    // Compress the video and remove metadata
+    const videoPath = path.join('uploadvideos', data.ficheiroDoVideo);
+    const compressedVideoPath = await this.videoService.processVideo(videoPath);
+    // Obtém apenas o nome do arquivo e a extensão
+    const fileName = path.basename(compressedVideoPath);
+
+    const videoData2 = new UpdateVideoDto()
+    videoData2.ficheiroDoVideo = fileName;
+    videoData2.codVideo = response.codVideo;
+    videoData2.dataLancamento = response.dataLancamento;
+
+    // Update the video with the new file path
+    await this.videoService.update(videoData2);
+
+    return response;
   }
 
   @Put()
@@ -82,6 +100,11 @@ export class VideoController {
     @Res() res: Response,
     @Headers() headers
   ) {
+    if (headers.referer !== 'http://localhost:3000/') {
+
+      return res.status(403).send('Forbidden');
+    }
+
     const range = headers.range;
 
     try {
@@ -96,7 +119,11 @@ export class VideoController {
   }
 
   @Get(':id/thumbnail')
-  async getThumbnail(@Param('id') id: string, @Res() res: Response) {
+  async getThumbnail(@Param('id') id: string, @Res() res: Response, @Headers() headers) {
+    if (headers.referer !== 'http://localhost:3000/') {
+      return res.status(403).send('Forbidden');
+    }
+
     try {
       const videoId = parseInt(id, 10);
       if (isNaN(videoId)) {
@@ -111,5 +138,4 @@ export class VideoController {
       throw new NotFoundException(error.message);
     }
   }
-
 }

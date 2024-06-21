@@ -5,12 +5,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as ffmpeg from 'fluent-ffmpeg';
+
 @Injectable()
 export class VideoService {
   constructor(private prisma: PrismaService) { }
 
   async add(data: AddVideoDto) {
-
     const currentDate = new Date().toISOString();
     let dataLancamento: string;
     let dataDeRegistro: string;
@@ -34,8 +34,8 @@ export class VideoService {
           fkArtista: data.fkArtista,
           dataLancamento: dataLancamento,
           fkUtilizador: data.fkUtilizador,
-          dataDeRegisto: dataDeRegistro
-        }
+          dataDeRegisto: dataDeRegistro,
+        },
       });
       return response;
     } catch (error) {
@@ -44,7 +44,6 @@ export class VideoService {
   }
 
   async update(data: UpdateVideoDto) {
-
     let dataLancamento: string;
 
     try {
@@ -179,4 +178,32 @@ export class VideoService {
     });
   }
 
+  async processVideo(videoPath: string): Promise<string> {
+    const outputPath = videoPath.replace(/(\.\w+)$/, '-compressed.mp4');
+
+    return new Promise<string>((resolve, reject) => {
+      ffmpeg(videoPath)
+        .outputOptions([
+          '-movflags faststart', // optimize for streaming
+          '-pix_fmt yuv420p', // ensure compatibility
+          '-vf scale=trunc(iw/2)*2:trunc(ih/2)*2', // ensure width and height are even
+          //'-b:v 1000k', // adjust bitrate
+          '-crf 28', // fator de qualidade constante
+          '-preset fast', // speed up compression
+          '-acodec aac', // audio codec
+          '-strict experimental',
+          '-metadata title=', // remove title metadata
+          '-metadata comment=' // remove comment metadata
+        ])
+        .save(outputPath)
+        .on('end', () => {
+          console.log(`Video processing finished: ${outputPath}`);
+          resolve(outputPath);
+        })
+        .on('error', (err) => {
+          console.error(`Failed to process video: ${err.message}`);
+          reject(new Error(`Failed to process video: ${err.message}`));
+        });
+    });
+  }
 }

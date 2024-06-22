@@ -94,6 +94,14 @@ export class VideoController {
     return this.videoService.listarVideos();
   }
 
+  @Get('listarVideosPorPagina/:page/:pageSize')
+  listarVideosPorPagina(
+    @Param('page', ParseIntPipe) page: number,
+    @Param('pageSize', ParseIntPipe) pageSize: number
+  ) {
+    return this.videoService.listarVideosPorPagina(page, pageSize);
+  }
+
   @Get('downloadVideo/:id')
   async downloadVideo(
     @Param('id', ParseIntPipe) id: number,

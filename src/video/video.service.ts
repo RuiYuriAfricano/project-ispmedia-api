@@ -106,6 +106,23 @@ export class VideoService {
     return response;
   }
 
+  async listarVideosPorPagina(page = 1, pageSize = 10) {
+    const skip = (page - 1) * pageSize;
+    const response = await this.prisma.video.findMany({
+      include: {
+        grupoMusical: true,
+        artista: true,
+        registadopor: true,
+      },
+      orderBy: {
+        dataDeRegisto: 'desc', // Ordena de forma decrescente pela data de registro
+      },
+      skip,
+      take: pageSize,
+    });
+    return response;
+  }
+
   async downloadVideo(id: number, range?: string) {
     const video = await this.prisma.video.findUnique({
       where: { codVideo: id },
@@ -184,16 +201,19 @@ export class VideoService {
     return new Promise<string>((resolve, reject) => {
       ffmpeg(videoPath)
         .outputOptions([
-          '-movflags faststart', // optimize for streaming
-          '-pix_fmt yuv420p', // ensure compatibility
-          '-vf scale=trunc(iw/2)*2:trunc(ih/2)*2', // ensure width and height are even
-          //'-b:v 1000k', // adjust bitrate
-          '-crf 28', // fator de qualidade constante
-          '-preset fast', // speed up compression
-          '-acodec aac', // audio codec
+          '-movflags faststart', // otimizar para streaming
+          '-pix_fmt yuv420p', // garantir compatibilidade
+          '-vf scale=1280:720', // ajustar resolução
+          '-b:v 800k', // ajustar bitrate para um valor mais baixo
+          '-crf 30', // fator de qualidade constante mais agressivo
+          '-preset fast', // acelerar compressão
+          '-acodec aac', // codec de áudio
+          '-b:a 120k', // bitrate de áudio para reduzir tamanho
           '-strict experimental',
-          '-metadata title=', // remove title metadata
-          '-metadata comment=' // remove comment metadata
+          '-metadata title=', // remover metadados de título
+          '-metadata comment=', // remover metadados de comentário
+          '-metadata creation_time=', // remover metadados de data de criação
+          '-metadata modification_time=' // remover metadados de data de modificação
         ])
         .save(outputPath)
         .on('end', () => {

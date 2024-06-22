@@ -108,6 +108,24 @@ export class MusicaService {
     });
     return response;
   }
+
+  async listarMusicasPorPagina(page = 1, pageSize = 10) {
+    const skip = (page - 1) * pageSize;
+    const response = await this.prisma.musica.findMany({
+      include: {
+        album: true,
+        grupoMusical: true,
+        artista: true,
+        registadopor: true,
+      },
+      orderBy: {
+        dataDeRegisto: 'desc', // Ordena de forma decrescente pela data de registro
+      },
+      skip,
+      take: pageSize,
+    });
+    return response;
+  }
   async downloadCapa(id: number) {
     const musica = await this.prisma.musica.findUnique({
       where: { codMusica: id },
@@ -207,7 +225,7 @@ export class MusicaService {
     return new Promise<string>((resolve, reject) => {
       ffmpeg(imagePath)
         .outputOptions([
-          '-vf scale=128:128', // Resize to 128x128 pixels
+          '-vf scale=300:170', // Resize to 128x128 pixels
           '-q:v 5', // Quality level
           '-format jpeg', // Convert to JPEG
           '-map_metadata -1' // Remove all metadata

@@ -100,6 +100,14 @@ export class MusicaController {
     return this.musicaService.listarMusicas();
   }
 
+  @Get('listarMusicasPorPagina/:page/:pageSize')
+  listarMusicasPorPagina(
+    @Param('page', ParseIntPipe) page: number,
+    @Param('pageSize', ParseIntPipe) pageSize: number
+  ) {
+    return this.musicaService.listarMusicasPorPagina(page, pageSize);
+  }
+
   @Get('downloadCapa/:id')
   async downloadCapa(
     @Param('id', ParseIntPipe) id: number,

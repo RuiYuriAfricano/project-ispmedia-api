@@ -96,6 +96,22 @@ export class AlbumService {
     return response;
   }
 
+  async listarAlbunsPorPagina(page = 1, pageSize = 10) {
+    const skip = (page - 1) * pageSize;
+    const response = await this.prisma.album.findMany({
+      include: {
+        grupoMusical: true,
+        artista: true,
+        registadopor: true,
+      },
+      orderBy: {
+        dataDeRegistro: 'desc', // Ordena de forma decrescente pela data de registro
+      },
+      skip,
+      take: pageSize,
+    });
+    return response;
+  }
   async pesquisaPorTitulo(titulo: string) {
     const response = await this.prisma.album.findMany({
       where: {

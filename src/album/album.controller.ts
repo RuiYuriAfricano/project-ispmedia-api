@@ -116,6 +116,14 @@ export class AlbumController {
     return this.albumService.listarAlbuns();
   }
 
+  @Get('listarAlbunsPorPagina/:page/:pageSize')
+  listarAlbunsPorPagina(
+    @Param('page', ParseIntPipe) page: number,
+    @Param('pageSize', ParseIntPipe) pageSize: number
+  ) {
+    return this.albumService.listarAlbunsPorPagina(page, pageSize);
+  }
+
   @Get('pesquisaPorTitulo/:tituloAlbum')
   pesquisaPorTitulo(@Param('tituloAlbum') titulo: string) {
     return this.albumService.pesquisaPorTitulo(titulo);

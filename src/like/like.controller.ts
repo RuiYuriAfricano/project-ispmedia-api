@@ -27,7 +27,7 @@ export class LikeController {
         return this.likeService.getOne(id);
     }
 
-    @Get('listarLikes')
+    @Post('listarLikes')
     listarLikes() {
         return this.likeService.listarLikes();
     }

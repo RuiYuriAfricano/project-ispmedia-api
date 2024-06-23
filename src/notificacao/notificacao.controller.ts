@@ -27,7 +27,7 @@ export class NotificacaoController {
         return this.notificacaoService.getOne(id);
     }
 
-    @Get('listarNotificacoes')
+    @Post('listarNotificacoes')
     listarNotificacoes() {
         return this.notificacaoService.listarNotificacoes();
     }

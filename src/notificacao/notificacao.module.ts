@@ -7,4 +7,4 @@ import { PrismaService } from 'src/prisma/prisma.service';
   controllers: [NotificacaoController],
   providers: [NotificacaoService, PrismaService],
 })
-export class AlbumModule { }
+export class NotificacaoModule { }

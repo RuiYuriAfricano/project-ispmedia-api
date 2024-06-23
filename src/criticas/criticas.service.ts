@@ -9,7 +9,7 @@ export class CriticaService {
 
     async add(data: AddCriticaDto) {
         try {
-            const response = await this.prisma.critica.create({
+            const response = await this.prisma.criticas.create({
                 data: {
                     ...data,
                     dataDeRegisto: new Date().toISOString(), // Use the current date as dataDeRegisto
@@ -24,7 +24,7 @@ export class CriticaService {
 
     async update(data: UpdateCriticaDto) {
         try {
-            const response = await this.prisma.critica.update({
+            const response = await this.prisma.criticas.update({
                 where: {
                     codCritica: data.codCritica,
                 },
@@ -40,7 +40,7 @@ export class CriticaService {
     }
 
     async remove(id: number) {
-        const response = await this.prisma.critica.delete({
+        const response = await this.prisma.criticas.delete({
             where: { codCritica: id },
         });
 
@@ -48,7 +48,7 @@ export class CriticaService {
     }
 
     async getOne(id: number) {
-        const response = await this.prisma.critica.findUnique({
+        const response = await this.prisma.criticas.findUnique({
             where: { codCritica: id },
         });
 
@@ -60,7 +60,7 @@ export class CriticaService {
     }
 
     async listarCriticas() {
-        const response = await this.prisma.critica.findMany({
+        const response = await this.prisma.criticas.findMany({
             include: {
                 utilizador: {
                     select: {
@@ -69,17 +69,17 @@ export class CriticaService {
                 },
                 album: {
                     select: {
-                        nomeAlbum: true,
+                        tituloAlbum: true,
                     },
                 },
                 musica: {
                     select: {
-                        nomeMusica: true,
+                        tituloMusica: true,
                     },
                 },
                 video: {
                     select: {
-                        nomeVideo: true,
+                        tituloVideo: true,
                     },
                 },
             },

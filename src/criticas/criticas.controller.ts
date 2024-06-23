@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
-import { CriticaService } from './critica.service';
+import { CriticaService } from './criticas.service';
 import { AddCriticaDto } from './dto/addCriticaDto';
 import { UpdateCriticaDto } from './dto/updateCriticaDto';
 

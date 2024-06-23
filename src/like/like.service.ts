@@ -69,17 +69,17 @@ export class LikeService {
                 },
                 album: {
                     select: {
-                        nomeAlbum: true,
+                        tituloAlbum: true,
                     },
                 },
                 musica: {
                     select: {
-                        nomeMusica: true,
+                        tituloMusica: true,
                     },
                 },
                 video: {
                     select: {
-                        nomeVideo: true,
+                        tituloVideo: true,
                     },
                 },
             },

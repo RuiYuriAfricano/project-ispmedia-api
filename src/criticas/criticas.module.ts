@@ -7,4 +7,4 @@ import { PrismaService } from 'src/prisma/prisma.service';
   controllers: [CriticaController],
   providers: [CriticaService, PrismaService],
 })
-export class AlbumModule { }
+export class CriticaModule { }

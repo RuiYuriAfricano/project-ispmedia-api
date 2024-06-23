@@ -27,7 +27,7 @@ export class CriticaController {
         return this.criticaService.getOne(id);
     }
 
-    @Get('listarCriticas')
+    @Post('listarCriticas')
     listarCriticas() {
         return this.criticaService.listarCriticas();
     }

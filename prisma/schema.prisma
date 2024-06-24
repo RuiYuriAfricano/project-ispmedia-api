@@ -282,6 +282,7 @@ model notificacao {
     codNotificacao   Int         @id @default(autoincrement())
     textoNotificacao String
     fkUtilizador     Int
+    utilizadorOrigem String?
     utilizador       utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
     dataNotificacao  DateTime
 }

@@ -3,4 +3,5 @@ export class UpdateNotificacaoDto {
     textoNotificacao: string;
     fkUtilizador: number;
     utilizadorOrigem?: string;
+    visto?: number;
 }

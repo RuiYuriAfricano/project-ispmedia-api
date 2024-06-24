@@ -285,4 +285,5 @@ model notificacao {
     utilizadorOrigem String?
     utilizador       utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
     dataNotificacao  DateTime
+    visto            Int         @default(0)
 }

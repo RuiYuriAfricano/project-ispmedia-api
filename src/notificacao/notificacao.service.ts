@@ -68,6 +68,9 @@ export class NotificacaoService {
                     },
                 },
             },
+            orderBy: {
+                dataNotificacao: 'desc', // Ordena de forma decrescente pela data de notificação
+            },
         });
 
         return response;

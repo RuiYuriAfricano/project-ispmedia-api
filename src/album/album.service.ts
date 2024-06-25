@@ -194,7 +194,16 @@ export class AlbumService {
       select: {
         codMusica: true,
         tituloMusica: true,
+        registadopor: true,
+        artista: true,
+        grupoMusical: true,
+        fkArtista: true,
+        fkGrupoMusical: true,
+        dataDeRegisto: true,
       },
+      orderBy: {
+        dataDeRegisto: 'desc', // Ordena de forma decrescente pela data 
+      }
     });
 
     const videos = await this.prisma.video.findMany({
@@ -212,7 +221,16 @@ export class AlbumService {
       select: {
         codVideo: true,
         tituloVideo: true,
+        registadopor: true,
+        artista: true,
+        grupoMusical: true,
+        fkArtista: true,
+        fkGrupoMusical: true,
+        dataDeRegisto: true,
       },
+      orderBy: {
+        dataDeRegisto: 'desc', // Ordena de forma decrescente pela data 
+      }
     });
 
     const albuns = await this.prisma.album.findMany({
@@ -230,7 +248,16 @@ export class AlbumService {
       select: {
         codAlbum: true,
         tituloAlbum: true,
+        registadopor: true,
+        artista: true,
+        grupoMusical: true,
+        fkArtista: true,
+        fkGrupoMusical: true,
+        dataDeRegistro: true,
       },
+      orderBy: {
+        dataDeRegistro: 'desc', // Ordena de forma decrescente pela data 
+      }
     });
 
     const resultados = [];
@@ -241,7 +268,13 @@ export class AlbumService {
         resultados.push({
           codigo: musica.codMusica,
           titulo: musica.tituloMusica,
+          registadopor: musica.registadopor,
+          artista: musica.artista,
+          grupoMusical: musica.grupoMusical,
+          fkArtista: musica.fkArtista,
+          fkGrupoMusical: musica.fkGrupoMusical,
           tipo: 'musica',
+          dataDeRegisto: musica.dataDeRegisto,
         });
       }
     }
@@ -252,7 +285,13 @@ export class AlbumService {
         resultados.push({
           codigo: video.codVideo,
           titulo: video.tituloVideo,
+          registadopor: video.registadopor,
+          artista: video.artista,
+          grupoMusical: video.grupoMusical,
+          fkArtista: video.fkArtista,
+          fkGrupoMusical: video.fkGrupoMusical,
           tipo: 'video',
+          dataDeRegisto: video.dataDeRegisto,
         });
       }
     }
@@ -263,7 +302,13 @@ export class AlbumService {
         resultados.push({
           codigo: album.codAlbum,
           titulo: album.tituloAlbum,
+          registadopor: album.registadopor,
+          artista: album.artista,
+          grupoMusical: album.grupoMusical,
+          fkArtista: album.fkArtista,
+          fkGrupoMusical: album.fkGrupoMusical,
           tipo: 'album',
+          dataDeRegisto: album.dataDeRegistro,
         });
       }
     }

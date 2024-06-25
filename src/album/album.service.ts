@@ -177,4 +177,98 @@ export class AlbumService {
         });
     });
   }
+
+  async pesquisarMusicasVideosEAlbumPorTitulo(palavraChave) {
+    const musicas = await this.prisma.musica.findMany({
+      where: {
+        AND: [
+          {
+            OR: [
+              { tituloMusica: { contains: palavraChave } },
+              { letra: { contains: palavraChave } },
+            ],
+          },
+          { visibilidade: "Publico" },
+        ],
+      },
+      select: {
+        codMusica: true,
+        tituloMusica: true,
+      },
+    });
+
+    const videos = await this.prisma.video.findMany({
+      where: {
+        AND: [
+          {
+            OR: [
+              { tituloVideo: { contains: palavraChave } },
+              { legenda: { contains: palavraChave } },
+            ],
+          },
+          { visibilidade: "Publico" },
+        ],
+      },
+      select: {
+        codVideo: true,
+        tituloVideo: true,
+      },
+    });
+
+    const albuns = await this.prisma.album.findMany({
+      where: {
+        AND: [
+          {
+            OR: [
+              { tituloAlbum: { contains: palavraChave } },
+              { descricao: { contains: palavraChave } },
+            ],
+          },
+          { visibilidade: "Publico" },
+        ],
+      },
+      select: {
+        codAlbum: true,
+        tituloAlbum: true,
+      },
+    });
+
+    const resultados = [];
+
+    // Adiciona músicas aos resultados
+    if (musicas.length > 0) {
+      for (const musica of musicas) {
+        resultados.push({
+          codigo: musica.codMusica,
+          titulo: musica.tituloMusica,
+          tipo: 'musica',
+        });
+      }
+    }
+
+    // Adiciona vídeos aos resultados
+    if (videos.length > 0) {
+      for (const video of videos) {
+        resultados.push({
+          codigo: video.codVideo,
+          titulo: video.tituloVideo,
+          tipo: 'video',
+        });
+      }
+    }
+
+    // Adiciona álbuns aos resultados
+    if (albuns.length > 0) {
+      for (const album of albuns) {
+        resultados.push({
+          codigo: album.codAlbum,
+          titulo: album.tituloAlbum,
+          tipo: 'album',
+        });
+      }
+    }
+
+    return resultados;
+  }
+
 }

@@ -142,4 +142,15 @@ export class AlbumController {
     const filePath = await this.albumService.downloadCapa(id);
     return res.sendFile(filePath);
   }
+
+  // Método para pesquisar músicas e vídeos por título
+  @Post('pesquisar')
+  async pesquisarVideosMusicasEAlbunsDoGrupoPorTitulo(@Body() body: { palavraChave: string }) {
+    try {
+      const resultados = await this.albumService.pesquisarMusicasVideosEAlbumPorTitulo(body.palavraChave);
+      return { success: true, data: resultados };
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  }
 }

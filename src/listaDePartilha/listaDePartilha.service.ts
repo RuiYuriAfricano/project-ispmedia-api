@@ -9,6 +9,7 @@ export class ListaDePartilhaService {
 
   async add(data: AddListaDePartilhaDto) {
     try {
+      data.dataDeCriacao = new Date().toISOString();
       const response = await this.prisma.listaDePartilha.create({
         data,
       });

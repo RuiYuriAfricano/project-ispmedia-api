@@ -57,7 +57,7 @@ export class MusicaService {
     try {
       dataLancamento = new Date(data.dataLancamento).toISOString();
     } catch (error) {
-      throw new Error('Invalid date value');
+      throw new Error('Invalid date value ' + { data });
     }
 
     try {

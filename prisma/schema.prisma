@@ -235,6 +235,7 @@ model listaDePartilha {
     codListaDePartilha        Int                         @id @default(autoincrement())
     nomeDaLista               String
     fkUtilizador              Int
+    dataDeCriacao             DateTime
     utilizador                utilizador?                 @relation(fields: [fkUtilizador], references: [codUtilizador])
     membrosDaListaDePartilhas membrosDaListaDePartilhas[]
 }

@@ -115,7 +115,7 @@ export class MusicaController {
     @Headers() headers
   ) {
 
-    if (headers.referer !== 'http://localhost:3000/') {
+    if (headers.referer !== 'https://localhost:3000/') {
       return res.status(403).send('Forbidden');
     }
 
@@ -131,7 +131,7 @@ export class MusicaController {
   ) {
     const range = headers.range;
 
-    if (headers.referer !== 'http://localhost:3000/') {
+    if (headers.referer !== 'https://localhost:3000/') {
       return res.status(403).send('Forbidden');
     }
 

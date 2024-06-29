@@ -108,7 +108,7 @@ export class VideoController {
     @Res() res: Response,
     @Headers() headers
   ) {
-    if (headers.referer !== 'http://localhost:3000/') {
+    if (headers.referer !== 'https://localhost:3000/') {
 
       return res.status(403).send('Forbidden');
     }
@@ -128,7 +128,7 @@ export class VideoController {
 
   @Get(':id/thumbnail')
   async getThumbnail(@Param('id') id: string, @Res() res: Response, @Headers() headers) {
-    if (headers.referer !== 'http://localhost:3000/') {
+    if (headers.referer !== 'https://localhost:3000/') {
       return res.status(403).send('Forbidden');
     }
 

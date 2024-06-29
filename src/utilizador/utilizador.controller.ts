@@ -103,7 +103,7 @@ export class UtilizadorController {
     , @Headers() headers
   ) {
 
-    if (headers.referer !== 'http://localhost:3000/') {
+    if (headers.referer !== 'https://localhost:3000/') {
       return res.status(403).send('Forbidden');
     }
     const filePath = await this.utilizadorService.downloadFoto(username);

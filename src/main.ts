@@ -21,6 +21,7 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'], // Cabeçalhos permitidos
     credentials: true, // Define se as credenciais (como cookies) podem ser enviadas
   });
+
   await app.listen(3333);
   //await app.listen(3333, '0.0.0.0');
 }

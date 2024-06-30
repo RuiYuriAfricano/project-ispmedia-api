@@ -29,6 +29,7 @@ model album {
     grupoDeAmigosCodGrupoDeAmigos Int?
     conteudosDosGrupos            conteudosDosGrupos[]
     like                          like[]
+    deletedAt                     DateTime?
 }
 
 //Definição do modelo do grupo musical
@@ -44,6 +45,7 @@ model grupoMusical {
     video            video[]
     album            album[]
     artista          artista[]
+    deletedAt        DateTime?
 }
 
 //Definição do modelo do artista
@@ -61,6 +63,7 @@ model artista {
     participacaoMusica participacaoMusica[]
     video              video[]
     participacaoVideo  participacaoVideo[]
+    deletedAt          DateTime?
 }
 
 //Definição do modelo da musica
@@ -90,15 +93,17 @@ model musica {
     conteudosDosGrupos            conteudosDosGrupos[]
     criticas                      criticas[]
     like                          like[]
+    deletedAt                     DateTime?
 }
 
 //Definição do modelo de participação da musica
 model participacaoMusica {
-    codParticipacaoMusica Int      @id @default(autoincrement())
+    codParticipacaoMusica Int       @id @default(autoincrement())
     fkArtista             Int
     fkMusica              Int
-    artista               artista? @relation(fields: [fkArtista], references: [codArtista])
-    musica                musica?  @relation(fields: [fkMusica], references: [codMusica])
+    artista               artista?  @relation(fields: [fkArtista], references: [codArtista])
+    musica                musica?   @relation(fields: [fkMusica], references: [codMusica])
+    deletedAt             DateTime?
 }
 
 //Definição do modelo da video
@@ -125,15 +130,17 @@ model video {
     conteudosDosGrupos            conteudosDosGrupos[]
     criticas                      criticas[]
     like                          like[]
+    deletedAt                     DateTime?
 }
 
 //Definição do modelo de participação do video
 model participacaoVideo {
-    codParticipacaoVideo Int      @id @default(autoincrement())
+    codParticipacaoVideo Int       @id @default(autoincrement())
     fkArtista            Int
     fkVideo              Int
-    artista              artista? @relation(fields: [fkArtista], references: [codArtista])
-    video                video?   @relation(fields: [fkVideo], references: [codVideo])
+    artista              artista?  @relation(fields: [fkArtista], references: [codArtista])
+    video                video?    @relation(fields: [fkVideo], references: [codVideo])
+    deletedAt            DateTime?
 }
 
 //Definição do modelo de utilizador
@@ -159,6 +166,7 @@ model utilizador {
     musica           musica[]
     video            video[]
     like             like[]
+    deletedAt        DateTime?
 }
 
 //Definição do modelo de playlist
@@ -171,6 +179,7 @@ model playlist {
     utilizador        utilizador?         @relation(fields: [fkUtilizador], references: [codUtilizador])
     MusicasDaPlaylist MusicasDaPlaylist[]
     videosDaPlaylist  videosDaPlaylist[]
+    deletedAt         DateTime?
 }
 
 //Definição do modelo de musicas da playlist
@@ -180,6 +189,7 @@ model MusicasDaPlaylist {
     fkPlayList           Int
     musica               musica?   @relation(fields: [fkMusica], references: [codMusica])
     playlist             playlist? @relation(fields: [fkPlayList], references: [codPlayList])
+    deletedAt            DateTime?
 }
 
 //Definição do modelo de video da playlist
@@ -189,6 +199,7 @@ model videosDaPlaylist {
     fkPlayList          Int
     video               video?    @relation(fields: [fkVideo], references: [codVideo])
     playlist            playlist? @relation(fields: [fkPlayList], references: [codPlayList])
+    deletedAt           DateTime?
 }
 
 //Definição do modelo de grupo de amigos
@@ -204,6 +215,7 @@ model grupoDeAmigos {
     musica                    musica[]
     video                     video[]
     conteudosDosGrupos        conteudosDosGrupos[]
+    deletedAt                 DateTime?
 }
 
 //Definição do modelo de membro dos grupos de amigos
@@ -217,6 +229,7 @@ model conteudosDosGrupos {
     musica          musica?        @relation(fields: [fkMusica], references: [codMusica])
     video           video?         @relation(fields: [fkVideo], references: [codVideo])
     grupoDeAmigos   grupoDeAmigos? @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
+    deletedAt       DateTime?
 }
 
 //Definição do modelo de membro dos grupos de amigos
@@ -228,6 +241,7 @@ model membrosDosGrupos {
     estado          Int //1-ativo 0-inactivo (quando for por meio de um pedido)
     utilizador      utilizador?    @relation(fields: [fkUtilizador], references: [codUtilizador])
     grupoDeAmigos   grupoDeAmigos? @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
+    deletedAt       DateTime?
 }
 
 //Definição do modelo de lista de partilha
@@ -238,6 +252,7 @@ model listaDePartilha {
     dataDeCriacao             DateTime
     utilizador                utilizador?                 @relation(fields: [fkUtilizador], references: [codUtilizador])
     membrosDaListaDePartilhas membrosDaListaDePartilhas[]
+    deletedAt                 DateTime?
 }
 
 //Definição do modelo de lista de partilha
@@ -247,6 +262,7 @@ model membrosDaListaDePartilhas {
     fkListaDePartilha Int
     grupoDeAmigos     grupoDeAmigos?   @relation(fields: [fkGrupoDeAmigos], references: [codGrupoDeAmigos])
     listaDePartilha   listaDePartilha? @relation(fields: [fkListaDePartilha], references: [codListaDePartilha])
+    deletedAt         DateTime?
 }
 
 //Definição do modelo de criticas a um album
@@ -263,6 +279,7 @@ model criticas {
     musica        musica?     @relation(fields: [fkMusica], references: [codMusica])
     video         video?      @relation(fields: [fkVideo], references: [codVideo])
     utilizador    utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
+    deletedAt     DateTime?
 }
 
 model like {
@@ -276,6 +293,7 @@ model like {
     musica        musica?     @relation(fields: [fkMusica], references: [codMusica])
     video         video?      @relation(fields: [fkVideo], references: [codVideo])
     utilizador    utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
+    deletedAt     DateTime?
 }
 
 //Definição do modelo de notificação
@@ -287,4 +305,5 @@ model notificacao {
     utilizador       utilizador? @relation(fields: [fkUtilizador], references: [codUtilizador])
     dataNotificacao  DateTime
     visto            Int         @default(0)
+    deletedAt        DateTime?
 }

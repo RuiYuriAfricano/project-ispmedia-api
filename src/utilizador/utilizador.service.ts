@@ -51,7 +51,7 @@ export class UtilizadorService {
         pass: "yuriyuri03",
         clientId: "594940743798-8pdh0j28ujos5bclvjlbuiv1547k4b51.apps.googleusercontent.com",
         clientSecret: "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",
-        refreshToken: "1//04kN3uschRCTXCgYIARAAGAQSNwF-L9Iruw3ILwxeHn-FLpXSncNoSk-G7YFvkJJ46gYajk2oUMhC3RwA0v_qfwCzp0jho7YAYcA"
+        refreshToken: "1//04NvF-ladGKtxCgYIARAAGAQSNwF-L9Ir7uGA_0AYEItG4E_zGnEgek9J_FUC9GEdI7qDwWooosmnAfEa3zneMC2DHp0-ooECGnY"
       }
     });
 

@@ -60,15 +60,18 @@ export class UtilizadorController {
     const utilizadorData = new UpdateUtilizadorDto()
 
 
-    // Compress the img da capa and remove metadata
-    const imgPath = path.join('upload', data.fotografia);
-    const compressedImgPath = await this.utilizadorService.convertAndResizeImageToJPG(imgPath);
-    // Obtém apenas o nome do arquivo e a extensão
-    const fileName = path.basename(compressedImgPath);
-    utilizadorData.fotografia = fileName;
-    utilizadorData.codUtilizador = (await response).codUtilizador;
-    // Update the video with the new file path
-    await this.utilizadorService.update(utilizadorData);
+    if (data.fotografia) {
+      // Compress the img da capa and remove metadata
+      const imgPath = path.join('upload', data.fotografia);
+      const compressedImgPath = await this.utilizadorService.convertAndResizeImageToJPG(imgPath);
+      // Obtém apenas o nome do arquivo e a extensão
+      const fileName = path.basename(compressedImgPath);
+      utilizadorData.fotografia = fileName;
+      utilizadorData.codUtilizador = (await response).codUtilizador;
+      // Update the video with the new file path
+      await this.utilizadorService.update(utilizadorData);
+    }
+
 
 
     return response;
